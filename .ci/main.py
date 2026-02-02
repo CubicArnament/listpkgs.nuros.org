@@ -101,6 +101,16 @@ def validate_metadata(metadata: dict[str, Any], repo_name: str) -> bool:
     return True
 
 
+def generate_package_key(metadata: dict[str, Any], repo_name: str) -> str:
+    """Generate unique package key from name and architecture."""
+    pkg_name = metadata.get("name", repo_name)
+    architecture = metadata.get("architecture", "")
+    
+    if architecture:
+        return f"{pkg_name}@{architecture}"
+    return pkg_name
+
+
 def main() -> None:
     """Main entry point."""
     print(f"Fetching repositories from {ORG_NAME}...")
@@ -133,10 +143,13 @@ def main() -> None:
         metadata["_source_repo"] = repo["html_url"]
         metadata["_last_updated"] = repo.get("updated_at", "")
 
-        pkg_name = metadata.get("name", name)
-        aggregated[pkg_name] = metadata
+        pkg_key = generate_package_key(metadata, name)
+        aggregated[pkg_key] = metadata
         stats["success"] += 1
-        print(f"  Added: {pkg_name} v{metadata.get('version', 'unknown')}")
+        
+        version = metadata.get('version', 'unknown')
+        arch_info = f" ({metadata.get('architecture')})" if metadata.get('architecture') else ""
+        print(f"  Added: {pkg_key} v{version}{arch_info}")
 
     aggregated = dict(sorted(aggregated.items()))
 
