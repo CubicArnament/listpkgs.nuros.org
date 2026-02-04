@@ -72,10 +72,11 @@ jobs:
       - name: Deploy to GitHub Pages
         if: steps.changes.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
-          git fetch origin gh-pages:gh-pages 2>/dev/null || git checkout --orphan gh-pages
-          git checkout gh-pages 2>/dev/null || true
-          git rm -rf . 2>/dev/null || true
-          git checkout main -- packages.json
+          mkdir -p /tmp/gh-pages
+          cp packages.json /tmp/gh-pages/
+          git fetch origin gh-pages 2>/dev/null || true
+          git checkout gh-pages 2>/dev/null || git checkout --orphan gh-pages
+          cp /tmp/gh-pages/packages.json .
           git add packages.json
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
