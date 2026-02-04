@@ -81,7 +81,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -m "chore: deploy package list (${{ steps.generate.outputs.package_count }} packages)" || echo "No changes to deploy"
-          git push -f origin gh-pages
+          git push origin gh-pages
           git checkout main
 
       - name: Create job summary
