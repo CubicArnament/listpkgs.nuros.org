@@ -12,10 +12,22 @@
   padding: v.$spacing-md;
   width: 100%;
   max-width: 280px;
-  max-height: calc(100vh - 280px);
+  height: fit-content;
+  max-height: calc(100dvh - 280px);
+  max-height: calc(100vh - 280px); // Fallback for older browsers
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   flex-shrink: 0;
+  position: sticky;
+  top: 100px;
   align-self: flex-start;
+  -webkit-tap-highlight-color: transparent;
+
+  @media (width <= 1024px) {
+    position: relative;
+    top: 0;
+    max-width: 100%;
+  }
 }
 
 .sidebar-title {
@@ -25,6 +37,10 @@
   margin: 0 0 v.$spacing-md 0;
   padding-bottom: v.$spacing-sm;
   border-bottom: 1px solid var(--color-border);
+
+  @media (width <= 768px) {
+    font-size: v.$fs-md;
+  }
 }
 
 // Tree Navigation
@@ -47,6 +63,7 @@
   border-radius: v.$radius-md;
   cursor: pointer;
   transition: var(--transition-smooth);
+  -webkit-tap-highlight-color: transparent;
 
   &:hover {
     background: rgba(var(--color-accent-rgb), 0.08);
@@ -69,6 +86,9 @@
   justify-content: center;
   width: 20px;
   height: 20px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
 
   &:hover {
     color: var(--color-accent);
@@ -92,6 +112,10 @@
   display: flex;
   align-items: center;
   gap: v.$spacing-xs;
+
+  @media (width <= 768px) {
+    font-size: v.$fs-sm;
+  }
 }
 
 .node-count {
@@ -119,6 +143,7 @@
 
 .checkbox-wrapper input[type='checkbox'] {
   appearance: none;
+  -webkit-appearance: none;
   width: 16px;
   height: 16px;
   border: 2px solid var(--color-border);
@@ -127,6 +152,7 @@
   cursor: pointer;
   transition: var(--transition-smooth);
   position: relative;
+  -webkit-tap-highlight-color: transparent;
 
   &:checked {
     background: var(--color-accent);
@@ -157,6 +183,7 @@
   justify-content: space-between;
   align-items: center;
   transition: var(--transition-smooth);
+  -webkit-tap-highlight-color: transparent;
 
   &:hover {
     background: rgba(var(--color-accent-rgb), 0.1);
@@ -174,10 +201,53 @@
   }
 }
 
-// Responsive
+// Responsive - Mobile first approach
+@media (width <= 1024px) {
+  .sidebar {
+    position: relative;
+    top: 0;
+    max-width: 100%;
+    max-height: none;
+  }
+}
+
 @media (width <= 768px) {
   .sidebar {
     max-width: 100%;
     min-width: auto;
+    padding: v.$spacing-sm;
+  }
+
+  .sidebar-title {
+    font-size: v.$fs-md;
+    margin-bottom: v.$spacing-sm;
+  }
+
+  .tree-node-toggle {
+    width: 24px;
+    height: 24px;
+  }
+
+  .tree-node-label {
+    font-size: v.$fs-sm;
+  }
+
+  .checkbox-wrapper input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (width <= 480px) {
+  .sidebar {
+    padding: v.$spacing-xs;
+  }
+
+  .sidebar-title {
+    font-size: v.$fs-sm;
+  }
+
+  .tree-node-label {
+    font-size: 0.8rem;
   }
 }

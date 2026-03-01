@@ -16,7 +16,8 @@ interface PackageListProps {
   packages: Package[];
   searchTerm: string;
   filters: Filters;
-  grouped?: boolean;
+  viewMode: 'list' | 'grouped';
+  displayMode: 'list' | 'grid';
 }
 
 const PackageList = (props: PackageListProps) => {
@@ -28,9 +29,14 @@ const PackageList = (props: PackageListProps) => {
     setFilteredPackages(sorted);
   });
 
+  const getListClass = () => {
+    if (props.viewMode === 'list' && props.displayMode === 'grid') return 'package-list view-grid';
+    return 'package-list view-list';
+  };
+
   return (
-    <div class="package-list">
-      {props.grouped ? (
+    <div class={getListClass()}>
+      {props.viewMode === 'grouped' ? (
         <GroupedPackageList packages={filteredPackages()} />
       ) : filteredPackages().length > 0 ? (
         filteredPackages().map(pkg => <PackageCard packageData={pkg} />)

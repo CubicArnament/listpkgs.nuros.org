@@ -39,6 +39,7 @@ function App() {
     sources: [],
   });
   const [viewMode, setViewMode] = createSignal<'list' | 'grouped'>('list');
+  const [displayMode, setDisplayMode] = createSignal<'list' | 'grid'>('list');
 
   // Initialize theme from localStorage or system preference
   const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') : 'dark';
@@ -152,24 +153,48 @@ function App() {
               <main class="app-main">
                 <SearchBar onSearch={debouncedSetSearchTerm} />
                 <div class="view-mode-container">
-                  <button
-                    class={`view-mode-btn ${viewMode() === 'list' ? 'active' : ''}`}
-                    onClick={() => setViewMode('list')}
-                  >
-                    List
-                  </button>
-                  <button
-                    class={`view-mode-btn ${viewMode() === 'grouped' ? 'active' : ''}`}
-                    onClick={() => setViewMode('grouped')}
-                  >
-                    Grouped
-                  </button>
+                  <div class="view-mode-group">
+                    <button
+                      class={`view-mode-btn ${viewMode() === 'grouped' ? 'active' : ''}`}
+                      onClick={() => setViewMode('grouped')}
+                      title="Grouped by letter"
+                    >
+                      Group view
+                    </button>
+                    <button
+                      class={`view-mode-btn ${viewMode() === 'list' ? 'active' : ''}`}
+                      onClick={() => setViewMode('list')}
+                      title="List view"
+                    >
+                      List view
+                    </button>
+                  </div>
+                  <div class="view-mode-divider"></div>
+                  <div class="view-mode-group">
+                    <button
+                      class={`view-mode-btn ${displayMode() === 'list' ? 'active' : ''}`}
+                      onClick={() => setDisplayMode('list')}
+                      title="List display"
+                      disabled={viewMode() !== 'list'}
+                    >
+                      <span>☰</span> List
+                    </button>
+                    <button
+                      class={`view-mode-btn ${displayMode() === 'grid' ? 'active' : ''}`}
+                      onClick={() => setDisplayMode('grid')}
+                      title="Grid display"
+                      disabled={viewMode() !== 'list'}
+                    >
+                      <span>▦</span> Grid
+                    </button>
+                  </div>
                 </div>
                 <PackageList
                   packages={packages()}
                   searchTerm={searchTerm()}
                   filters={filters()}
-                  grouped={viewMode() === 'grouped'}
+                  viewMode={viewMode()}
+                  displayMode={displayMode()}
                 />
               </main>
             </div>

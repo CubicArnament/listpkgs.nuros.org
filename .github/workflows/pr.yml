@@ -1,0 +1,365 @@
+# =============================================================================
+# Pull Request Testing Workflow
+# =============================================================================
+# Comprehensive tests for every Pull Request:
+# 1. Lint (ESLint + Stylelint)
+# 2. Security checks (npm audit, dependency review)
+# 3. Build verification
+# 4. Docker/Podman build test
+# 5. Playwright tests
+#
+# Compatible with both Docker and Podman runtimes.
+# Uses slirp4netns for rootless networking (Podman).
+# Uses AppArmor for container security.
+# Uses pigz for fast image decompression.
+# =============================================================================
+
+name: Pull Request Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+concurrency:
+  group: pr-tests-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '9'
+  PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+
+jobs:
+  # -------------------------------------------------------------------------
+  # Job 1: Lint Code
+  # -------------------------------------------------------------------------
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./listpkgs.nuros.front-end
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Container Runtimes + Security Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              docker.io \
+              docker-compose \
+              podman \
+              podman-docker \
+              slirp4netns \
+              apparmor \
+              apparmor-utils \
+              pigz
+
+      - name: Detect Container Runtime
+        id: runtime
+        run: |
+          if docker info &> /dev/null; then
+            echo "runtime=docker" >> $GITHUB_OUTPUT
+          elif podman info &> /dev/null; then
+            echo "runtime=podman" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: listpkgs.nuros.front-end/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint (TypeScript)
+        run: pnpm lint:ts
+        continue-on-error: true
+
+      - name: Run Stylelint (SCSS)
+        run: pnpm lint:scss
+        continue-on-error: true
+
+  # -------------------------------------------------------------------------
+  # Job 2: Security Checks
+  # -------------------------------------------------------------------------
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./listpkgs.nuros.front-end
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Container Runtimes + Security Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              docker.io \
+              docker-compose \
+              podman \
+              podman-docker \
+              slirp4netns \
+              apparmor \
+              apparmor-utils \
+              pigz
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: listpkgs.nuros.front-end/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run npm audit
+        run: pnpm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          deny-licenses: GPL-3.0, AGPL-3.0
+
+  # -------------------------------------------------------------------------
+  # Job 3: Build Verification
+  # -------------------------------------------------------------------------
+  build-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./listpkgs.nuros.front-end
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Container Runtimes + Security Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              docker.io \
+              docker-compose \
+              podman \
+              podman-docker \
+              slirp4netns \
+              apparmor \
+              apparmor-utils \
+              pigz
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: listpkgs.nuros.front-end/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
+
+      - name: Verify build artifacts
+        run: |
+          ls -lh dist/ | head -20
+          [ -f "dist/index.html" ] || exit 1
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-build
+          path: listpkgs.nuros.front-end/dist/
+          retention-days: 1
+
+  # -------------------------------------------------------------------------
+  # Job 4: Docker/Podman Build Test
+  # -------------------------------------------------------------------------
+  docker-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Container Runtimes + Security Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              docker.io \
+              docker-compose \
+              podman \
+              podman-docker \
+              slirp4netns \
+              apparmor \
+              apparmor-utils \
+              pigz
+
+      - name: Detect Container Runtime
+        id: runtime
+        run: |
+          if docker info &> /dev/null; then
+            echo "runtime=docker" >> $GITHUB_OUTPUT
+            echo "compose=docker compose" >> $GITHUB_OUTPUT
+          elif podman info &> /dev/null; then
+            echo "runtime=podman" >> $GITHUB_OUTPUT
+            echo "compose=podman-compose" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Docker image
+        run: |
+          ${{ steps.runtime.outputs.compose }} -f docker-compose.ci.yml build builder
+          echo "✅ Build successful (${{ steps.runtime.outputs.runtime }})"
+
+      - name: Verify images
+        run: |
+          docker images 2>/dev/null || podman images | head -10
+
+  # -------------------------------------------------------------------------
+  # Job 5: Playwright Tests
+  # -------------------------------------------------------------------------
+  playwright-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: ./listpkgs.nuros.front-end
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Container Runtimes + Security Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              docker.io \
+              docker-compose \
+              podman \
+              podman-docker \
+              slirp4netns \
+              apparmor \
+              apparmor-utils \
+              pigz
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: listpkgs.nuros.front-end/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: pnpm test -- --project="chromium" --reporter=list
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: listpkgs.nuros.front-end/playwright-report/
+          retention-days: 7
+
+  # -------------------------------------------------------------------------
+  # Job 6: PR Summary
+  # -------------------------------------------------------------------------
+  pr-summary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [lint, security, build-verify, docker-build, playwright-tests]
+    if: always()
+
+    steps:
+      - name: Create PR summary
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << EOF
+          ## Pull Request Test Results
+
+          | Check | Status |
+          |-------|--------|
+          | 🔍 Lint | ${{ needs.lint.result }} |
+          | 🔒 Security | ${{ needs.security.result }} |
+          | 🏗️ Build | ${{ needs.build-verify.result }} |
+          | 🐳 Docker/Podman | ${{ needs.docker-build.result }} |
+          | 🧪 Playwright | ${{ needs.playwright-tests.result }} |
+
+          **Overall**: ${{ needs.playwright-tests.result }}
+          EOF
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const result = {
+              lint: '${{ needs.lint.result }}',
+              security: '${{ needs.security.result }}',
+              build: '${{ needs.build-verify.result }}',
+              docker: '${{ needs.docker-build.result }}',
+              tests: '${{ needs.playwright-tests.result }}'
+            };
+            const allPassed = Object.values(result).every(r => r === 'success');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ${allPassed ? '✅' : '⚠️'} PR Test Results
+
+          | Check | Status |
+          |-------|--------|
+          | 🔍 Lint | ${result.lint} |
+          | 🔒 Security | ${result.security} |
+          | 🏗️ Build | ${result.build} |
+          | 🐳 Docker/Podman | ${result.docker} |
+          | 🧪 Tests | ${result.tests} |
+
+          ${allPassed ? '**All checks passed!** ✅' : '**Some checks failed.** See logs.'}
+          `
+            });

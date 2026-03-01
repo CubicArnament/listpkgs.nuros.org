@@ -22,4 +22,5 @@ playwright-report
 *.njsproj
 *.sln
 *.sw?
-рщ
+# Временно
+src-go

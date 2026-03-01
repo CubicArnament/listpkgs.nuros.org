@@ -10,6 +10,9 @@
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: v.$spacing-lg;
   padding: v.$spacing-md;
+  width: 100%;
+  max-width: 100%;
+  justify-content: center;
 }
 
 .package-card {

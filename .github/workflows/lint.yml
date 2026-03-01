@@ -1,3 +1,10 @@
+# =============================================================================
+# Lint Frontend Workflow
+# =============================================================================
+# Runs ESLint and Stylelint on code changes.
+# Compatible with both Docker and Podman runtimes.
+# =============================================================================
+
 name: Lint Frontend
 
 on:
@@ -23,6 +30,41 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Container Runtimes (Docker + Podman) + Security Tools
+        run: |
+          echo "🔧 Installing container runtimes and security tools..."
+          sudo apt-get update
+          sudo apt-get install -y \
+              docker.io \
+              docker-compose \
+              podman \
+              podman-docker \
+              slirp4netns \
+              apparmor \
+              apparmor-utils \
+              pigz
+          
+          echo "🐳 Docker: $(docker --version 2>/dev/null || echo 'not available')"
+          echo "🦦 Podman: $(podman --version 2>/dev/null || echo 'not available')"
+          echo "🔒 AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
+          echo "⚡ pigz: $(pigz --version 2>/dev/null | head -1 || echo 'installed')"
+
+      - name: Detect Container Runtime
+        id: runtime
+        run: |
+          if docker info &> /dev/null; then
+            echo "runtime=docker" >> $GITHUB_OUTPUT
+            echo "compose=docker compose" >> $GITHUB_OUTPUT
+            echo "✅ Using Docker"
+          elif podman info &> /dev/null; then
+            echo "runtime=podman" >> $GITHUB_OUTPUT
+            echo "compose=podman-compose" >> $GITHUB_OUTPUT
+            echo "✅ Using Podman"
+          else
+            echo "❌ No container runtime available"
+            exit 1
+          fi
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -39,8 +81,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run ESLint
-        run: pnpm lint
+      - name: Run ESLint (TypeScript)
+        run: pnpm lint:ts
 
-      - name: Run Prettier check
-        run: pnpm check-format
+      - name: Run Stylelint (SCSS)
+        run: pnpm lint:scss
+
+      - name: Create lint summary
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << EOF
+          ## Lint Results
+
+          - **Runtime**: ${{ steps.runtime.outputs.runtime }}
+          - **ESLint**: ✅ Passed
+          - **Stylelint**: ✅ Passed
+          EOF

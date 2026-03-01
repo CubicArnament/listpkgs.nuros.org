@@ -15,7 +15,7 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.scripts]
-listpkgs-aggregate = "listpkgs_aggregator.main:main"
+listpkgs-aggregate = "main:main"
 
 [project.optional-dependencies]
 dev = [
@@ -30,3 +30,6 @@ dev = [
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["listpkgs_aggregator*"]
+
+[tool.setuptools]
+py-modules = ["main"]

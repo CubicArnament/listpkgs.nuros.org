@@ -11,11 +11,27 @@
   border-radius: v.$radius-lg;
   padding: v.$spacing-sm;
   display: flex;
-  gap: v.$spacing-sm;
+  align-items: center;
+  gap: v.$spacing-md;
   margin-bottom: v.$spacing-lg;
   width: fit-content;
   align-self: center;
   border: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.view-mode-group {
+  display: flex;
+  gap: v.$spacing-xs;
+  align-items: center;
+}
+
+.view-mode-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--color-border);
+  margin: 0 v.$spacing-xs;
 }
 
 .view-mode-btn {
@@ -28,6 +44,9 @@
   cursor: pointer;
   transition: var(--transition-smooth);
   font-size: v.$fs-sm;
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-xs;
 
   &.active {
     background: var(--color-accent);
@@ -37,5 +56,33 @@
   &:hover:not(.active) {
     color: var(--color-text-primary);
     background: rgba(var(--color-accent-rgb), 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+// Package list view modes
+.package-list {
+  &.view-list {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+
+  &.view-grid {
+    grid-template-columns: repeat(4, 1fr);
+
+    @media (width <= 1200px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (width <= 900px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (width <= 600px) {
+      grid-template-columns: 1fr;
+    }
   }
 }

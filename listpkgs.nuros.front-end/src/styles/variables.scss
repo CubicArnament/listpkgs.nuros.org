@@ -29,20 +29,20 @@ $nuros-navy: #0a0e1a;
 
 // --- Core Palette - Light ---
 $color-background-light: #f8fafc; // Light gray background
-$color-surface-light: #ffffff; // White surface
+$color-surface-light: #fff; // White surface
 $color-surface-alt-light: #f1f5f9; // Alternate surface
 $color-glass-bg-light: rgb(255 255 255 / 80%); // Light glass background
 $color-text-primary-light: #0f172a; // Dark navy text
 $color-text-secondary-light: #64748b; // Muted gray text
-$color-accent-blue-light: #0066ff; // Blue accent for light theme
+$color-accent-blue-light: #06f; // Blue accent for light theme
 $color-accent-pink-light: #ff6b9d; // Pink accent (same)
 $color-border-light: rgb(0 0 0 / 8%); // Subtle dark border
 
 // --- Additional Palette - Light ---
-$nuros-accent-cyan-light: #0066ff;
+$nuros-accent-cyan-light: #06f;
 $nuros-accent-pink-light: #ff6b9d;
 $nuros-accent-purple-light: #7c3aed;
-$nuros-white: #ffffff;
+$nuros-white: #fff;
 
 // ============================================================================
 // SHARED VARIABLES
@@ -93,7 +93,6 @@ $shadow-sm-light: 0 1px 3px rgb(0 0 0 / 10%);
 $shadow-md-light: 0 4px 12px rgb(0 0 0 / 12%);
 $shadow-lg-light: 0 10px 24px rgb(0 0 0 / 15%);
 $shadow-xl-light: 0 20px 48px rgb(0 0 0 / 20%);
-
 $backdrop-blur: blur(16px);
 
 // --- Z-Index ---
