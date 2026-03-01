@@ -24,3 +24,8 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/

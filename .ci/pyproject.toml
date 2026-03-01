@@ -14,6 +14,9 @@ dependencies = [
 ]
 requires-python = ">=3.9"
 
+[project.scripts]
+listpkgs-aggregate = "listpkgs_aggregator.main:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",

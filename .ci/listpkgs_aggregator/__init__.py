@@ -8,10 +8,12 @@
 
 from .aggregator import run_aggregation
 from .github_client import get_all_repos
+from .main import main
 from .metadata_processor import process_repo
 
 __all__ = [
     "run_aggregation",
     "get_all_repos",
     "process_repo",
+    "main",
 ]

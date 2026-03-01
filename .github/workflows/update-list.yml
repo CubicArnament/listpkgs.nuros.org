@@ -37,16 +37,21 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+          version: "latest"
 
-      - name: Install dependencies
+      - name: Install dependencies and package
         run: |
-          uv pip install --system .ci/.
+          cd .ci
+          uv sync --frozen
 
       - name: Generate repodata.json
         id: generate
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: listpkgs-aggregate
+          PATH: ${{ github.workspace }}/.ci/.venv/bin:${{ env.PATH }}
+        run: |
+          cd .ci
+          listpkgs-aggregate
 
       - name: Move repodata.json to public directory
         run: |
