@@ -8,9 +8,11 @@
 # 4. Deploy to GitHub Pages
 #
 # Triggered by:
-# - Schedule (every 6 hours)
 # - Manual dispatch
 # - Push to main branch
+#
+# Note: For scheduled runs (every 6 hours), see scheduled-ci-cd.yml
+# which runs lint.yml first before the main pipeline.
 #
 # Compatible with both Docker and Podman runtimes.
 # Uses slirp4netns for rootless networking (Podman).
@@ -21,8 +23,6 @@
 name: CI/CD Pipeline
 
 on:
-  schedule:
-    - cron: '0 */6 * * *'
   push:
     branches: [ main ]
   workflow_dispatch:

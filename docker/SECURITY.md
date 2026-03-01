@@ -160,6 +160,208 @@ deny /var/tmp/** ix,
 
 ## Monitoring & Auditing
 
+### 🔍 Auditd Setup for Security Logging
+
+**auditd** (Linux Audit Framework) logs all AppArmor denials and security events.
+
+#### Installation
+
+```bash
+# Install auditd
+sudo apt update
+sudo apt install auditd
+
+# Enable and start service
+sudo systemctl enable auditd
+sudo systemctl start auditd
+
+# Check status
+sudo systemctl status auditd
+```
+
+#### Configure Audit Rules for AppArmor
+
+```bash
+# Add audit rules for AppArmor monitoring
+sudo auditctl -w /sys/kernel/apparmor -p rwa -k apparmor
+sudo auditctl -w /etc/apparmor.d/container-nuros-strict -p rwa -k apparmor_profile
+sudo auditctl -w /var/log/audit/ -p rwa -k audit_logs
+
+# Make rules persistent (survive reboot)
+echo "-w /sys/kernel/apparmor -p rwa -k apparmor" | \
+    sudo tee -a /etc/audit/rules.d/apparmor.rules
+echo "-w /etc/apparmor.d/container-nuros-strict -p rwa -k apparmor_profile" | \
+    sudo tee -a /etc/audit/rules.d/apparmor.rules
+```
+
+#### View Audit Logs
+
+```bash
+# View AppArmor denials (last 24 hours)
+sudo ausearch -m apparmor_denied -ts today
+
+# View denials for specific profile
+sudo ausearch -k apparmor_profile -m apparmor_denied
+
+# View all container-nuros-strict denials
+sudo ausearch -m apparmor_denied | grep "container-nuros-strict"
+
+# Real-time monitoring
+sudo tail -f /var/log/audit/audit.log | grep container-nuros-strict
+
+# Search by time range
+sudo ausearch -m apparmor_denied -ts recent  # Last 10 minutes
+sudo ausearch -m apparmor_denied -ts current  # Current session
+```
+
+#### Audit Log Format
+
+Example denial entry:
+```
+type=AVC msg=audit(1234567890.123:456): apparmor="DENIED" \
+  operation="capable" profile="container-nuros-strict" \
+  pid=1234 comm="docker" requested="dac_override" has="No"
+```
+
+Fields:
+- `msg=audit(timestamp:serial)` — Unique event identifier
+- `apparmor="DENIED"` — Access was denied
+- `operation` — Type of operation (capable, file, network, etc.)
+- `profile` — AppArmor profile name
+- `requested` — Capability/access that was requested
+- `comm` — Command/process that triggered the denial
+
+### 📊 Monitoring Scripts
+
+#### Check Recent Denials
+
+Create `/usr/local/bin/check-apparmor-audit.sh`:
+
+```bash
+#!/bin/bash
+# Check AppArmor denials for container-nuros-strict profile
+
+echo "=== AppArmor Denials (last 24h) ==="
+echo ""
+
+DENIALS=$(ausearch -m apparmor_denied -ts today 2>/dev/null | \
+    grep "container-nuros-strict" || echo "No denials found")
+
+echo "$DENIALS"
+
+# Count denials
+COUNT=$(echo "$DENIALS" | grep -c "DENIED" || echo "0")
+echo ""
+echo "Total denials: $COUNT"
+
+# Exit with error if denials found
+if [ "$COUNT" -gt "0" ]; then
+    exit 1
+fi
+exit 0
+```
+
+Make executable:
+```bash
+chmod +x /usr/local/bin/check-apparmor-audit.sh
+```
+
+#### Continuous Monitoring Script
+
+Create `/usr/local/bin/monitor-apparmor.sh`:
+
+```bash
+#!/bin/bash
+# Real-time AppArmor monitoring
+
+echo "🔍 Monitoring AppArmor denials in real-time..."
+echo "Press Ctrl+C to stop"
+echo ""
+
+tail -f /var/log/audit/audit.log 2>/dev/null | \
+    grep --line-buffered "container-nuros-strict" | \
+    while read line; do
+        timestamp=$(echo "$line" | grep -oP 'msg=audit\(\K[0-9.]+' | head -1)
+        if [ -n "$timestamp" ]; then
+            human_time=$(date -d "@${timestamp%.*}" '+%Y-%m-%d %H:%M:%S' 2>/dev/null)
+        fi
+        echo "[$human_time] $line"
+    done
+```
+
+#### Daily Audit Report
+
+Create `/usr/local/bin/daily-audit-report.sh`:
+
+```bash
+#!/bin/bash
+# Generate daily AppArmor audit report
+
+REPORT_DATE=$(date +%Y-%m-%d)
+REPORT_FILE="/var/log/audit/apparmor-report-${REPORT_DATE}.txt"
+
+echo "=== AppArmor Daily Report ===" > "$REPORT_FILE"
+echo "Date: $REPORT_DATE" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+
+echo "--- Summary ---" >> "$REPORT_FILE"
+ausearch -m apparmor_denied -ts today 2>/dev/null | \
+    grep "container-nuros-strict" | \
+    wc -l | xargs echo "Total denials:" >> "$REPORT_FILE"
+
+echo "" >> "$REPORT_FILE"
+echo "--- Recent Denials ---" >> "$REPORT_FILE"
+ausearch -m apparmor_denied -ts today 2>/dev/null | \
+    grep "container-nuros-strict" | tail -20 >> "$REPORT_FILE"
+
+echo "Report saved to: $REPORT_FILE"
+```
+
+Add to crontab for daily reports:
+```bash
+# Run daily at 23:59
+59 23 * * * /usr/local/bin/daily-audit-report.sh
+```
+
+### 📋 Common Denials and Solutions
+
+| Denial | Cause | Solution |
+|--------|-------|----------|
+| `dac_override` | App trying to bypass file permissions | Review app code, don't allow this capability |
+| `ptrace` | App trying to debug/trace processes | Expected denial, ptrace is blocked |
+| `/tmp/** ix` | App trying to execute from /tmp | Move executables to /app, /tmp is for data |
+| `net_raw` | App using raw sockets (ping, etc.) | Expected, raw sockets are blocked |
+| `/home/*/**` | Access to host home directories | Expected, host homes are protected |
+
+### 🔔 Alerting Setup
+
+#### Systemd Service for Monitoring
+
+Create `/etc/systemd/system/apparmor-monitor.service`:
+
+```ini
+[Unit]
+Description=AppArmor Container Monitoring
+After=auditd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/monitor-apparmor.sh
+Restart=always
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable service:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable apparmor-monitor
+sudo systemctl start apparmor-monitor
+```
+
 ### View Audit Logs
 
 ```bash
