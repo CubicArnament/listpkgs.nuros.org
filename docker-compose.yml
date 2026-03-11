@@ -77,9 +77,6 @@ services:
       - build_dist:/app/listpkgs.nuros.front-end/dist
     environment:
       - NODE_ENV=production
-    depends_on:
-      generate-repodata:
-        condition: service_completed_successfully
     profiles:
       - preview
       - ci
