@@ -1,6 +1,0 @@
-\"ci: fix Podman socket setup in GitHub Actions\"  
-\"\"  
-\"- Use systemctl start podman.socket when available\"  
-\"- Fallback to manual podman system service\"  
-\"- Add chmod 666 for docker.sock permissions\"  
-\"- Increase sleep to 3 seconds\"  
