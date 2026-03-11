@@ -42,7 +42,8 @@ jobs:
       - name: Install Podman and podman-compose
         run: |
           sudo apt-get update
-          sudo apt-get install -y podman podman-docker
+          sudo apt-get install -y podman podman-docker python3-pip
+          pip3 install podman-compose --break-system-packages
 
       - name: Run ESLint + Stylelint in container
         run: |
@@ -100,7 +101,8 @@ jobs:
       - name: Install Podman and podman-compose
         run: |
           sudo apt-get update
-          sudo apt-get install -y podman podman-docker
+          sudo apt-get install -y podman podman-docker python3-pip
+          pip3 install podman-compose --break-system-packages
 
       - name: Build frontend in container
         run: |
@@ -127,7 +129,8 @@ jobs:
       - name: Install Podman and podman-compose
         run: |
           sudo apt-get update
-          sudo apt-get install -y podman podman-docker
+          sudo apt-get install -y podman podman-docker python3-pip
+          pip3 install podman-compose --break-system-packages
 
       - name: Run Playwright tests in container
         run: |
