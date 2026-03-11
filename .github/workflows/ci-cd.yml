@@ -2,6 +2,7 @@
 # CI/CD Pipeline - Main Workflow
 # =============================================================================
 # Full CI/CD pipeline with scheduled runs every 6 hours.
+# Checks lint.yml status before proceeding.
 # All jobs run in Podman containers.
 #
 # Triggered by:
@@ -35,11 +36,48 @@ env:
 
 jobs:
   # -------------------------------------------------------------------------
-  # Job 1: Update Package List
+  # Job 1: Check Lint Status
+  # -------------------------------------------------------------------------
+  # Checks if the last lint.yml run was successful.
+  # Does NOT trigger lint.yml - just reads the last result.
+  check-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      lint-passed: ${{ steps.check.outputs.passed }}
+
+    steps:
+      - name: Check lint status
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LINT_RESULT=$(gh run list \
+            --repo ${{ github.repository }} \
+            --workflow "Lint Frontend" \
+            -s success \
+            --limit 1 \
+            --json conclusion \
+            -q '.[0].conclusion // "unknown"')
+
+          if [ "$LINT_RESULT" = "success" ]; then
+            echo "passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Log lint status
+        run: |
+          echo "Last lint.yml result: ${{ steps.check.outputs.passed }}"
+
+  # -------------------------------------------------------------------------
+  # Job 2: Update Package List
   # -------------------------------------------------------------------------
   update-list:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    needs: check-lint
+    if: needs.check-lint.outputs.lint-passed == 'true'
 
     outputs:
       package_count: ${{ steps.generate.outputs.package_count }}
@@ -103,12 +141,13 @@ jobs:
           retention-days: 7
 
   # -------------------------------------------------------------------------
-  # Job 2: Build Frontend
+  # Job 3: Build Frontend
   # -------------------------------------------------------------------------
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: update-list
+    needs: [check-lint, update-list]
+    if: needs.check-lint.outputs.lint-passed == 'true'
 
     outputs:
       build_success: ${{ steps.build.outputs.success }}
@@ -151,12 +190,13 @@ jobs:
           compression-level: 9
 
   # -------------------------------------------------------------------------
-  # Job 3: Run Tests
+  # Job 4: Run Tests
   # -------------------------------------------------------------------------
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: build
+    needs: [check-lint, build]
+    if: needs.check-lint.outputs.lint-passed == 'true' && needs.build.outputs.build_success == 'true'
 
     steps:
       - name: Checkout repository
@@ -186,14 +226,15 @@ jobs:
           retention-days: 7
 
   # -------------------------------------------------------------------------
-  # Job 4: Deploy to GitHub Pages
+  # Job 5: Deploy to GitHub Pages
   # -------------------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [update-list, build, test]
+    needs: [check-lint, update-list, build, test]
     if: |
       always() &&
+      needs.check-lint.result == 'success' &&
       needs.update-list.result == 'success' &&
       needs.build.result == 'success' &&
       needs.test.result == 'success'
@@ -240,6 +281,7 @@ jobs:
           | **Triggered by** | \`${{ github.event_name }}\` |
 
           ### Job Results
+          - Lint Check: ${{ needs.check-lint.result }}
           - Update List: ${{ needs.update-list.result }}
           - Build: ${{ needs.build.result }}
           - Tests: ${{ needs.test.result }}

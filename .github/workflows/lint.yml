@@ -4,14 +4,15 @@
 # Runs ESLint and Stylelint on code changes.
 # Executes in a lightweight Podman container (lint_frontend.Dockerfile).
 #
-# Runs ONLY on pull requests (not on push).
-# For full PR tests (security, build, playwright), see pr.yml.
+# Runs on push to main branch.
+# CI/CD pipeline checks this workflow status before proceeding.
+# For PR tests, see pr.yml (includes lint + security + build + playwright).
 # =============================================================================
 
 name: Lint Frontend
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
 
 permissions:
