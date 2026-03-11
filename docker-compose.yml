@@ -96,9 +96,9 @@ services:
       dockerfile: docker/lint_frontend.Dockerfile
     container_name: nuros-lint
     volumes:
-      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end:ro
+      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
       - lint_node_modules:/app/listpkgs.nuros.front-end/node_modules
-    command: ["sh", "-c", "pnpm lint:ts && pnpm lint:scss"]
+    command: ["sh", "-c", "pnpm lint:ts:ci && pnpm lint:scss:ci"]
     profiles:
       - ci
     networks:
