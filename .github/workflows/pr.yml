@@ -187,13 +187,12 @@ jobs:
               repo: context.repo.repo,
               body: `## ${allPassed ? '✅' : '⚠️'} PR Test Results
 
-          | Check | Status |
-          |-------|--------|
-          | 🔍 Lint | ${result.lint} |
-          | 🔒 Security | ${result.security} |
-          | 🏗️ Build | ${result.build} |
-          | 🧪 Tests | ${result.tests} |
+| Check | Status |
+|-------|--------|
+| 🔍 Lint | ${result.lint} |
+| 🔒 Security | ${result.security} |
+| 🏗️ Build | ${result.build} |
+| 🧪 Tests | ${result.tests} |
 
-          ${allPassed ? '**All checks passed!** ✅' : '**Some checks failed.** See logs.'}
-          `
+${allPassed ? '**All checks passed!** ✅' : '**Some checks failed.** See logs.'}`
             });

@@ -98,7 +98,7 @@ services:
     volumes:
       - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
       - lint_node_modules:/app/listpkgs.nuros.front-end/node_modules
-    command: ["sh", "-c", "pnpm lint:ts:ci && pnpm lint:scss:ci"]
+    command: ["sh", "-c", "pnpm lint"]
     profiles:
       - ci
     networks:
