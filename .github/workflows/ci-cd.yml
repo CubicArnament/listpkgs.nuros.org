@@ -89,30 +89,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Docker (Podman compatibility)
+      - name: Set up Podman
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-              podman \
-              podman-docker || true
+          sudo apt-get install -y podman podman-docker
 
-      - name: Detect Container Runtime
-        id: runtime
+      - name: Start Podman socket
         run: |
-          if command -v docker &> /dev/null; then
-            echo "compose=docker compose" >> $GITHUB_OUTPUT
-          elif command -v podman &> /dev/null; then
-            echo "compose=podman-compose" >> $GITHUB_OUTPUT
-          else
-            echo "❌ No container runtime available"
-            exit 1
-          fi
+          podman system service --time=0 unix:///var/run/docker.sock &
+          sleep 2
 
       - name: Run update-list service
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ${{ steps.runtime.outputs.compose }} --profile ci run --rm update-list
+          docker compose --profile ci run --rm update-list
 
       - name: Generate package count
         id: generate
@@ -179,29 +170,20 @@ jobs:
           name: repodata-json
           path: listpkgs.nuros.front-end/public/
 
-      - name: Install Docker (Podman compatibility)
+      - name: Set up Podman
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-              podman \
-              podman-docker || true
+          sudo apt-get install -y podman podman-docker
 
-      - name: Detect Container Runtime
-        id: runtime
+      - name: Start Podman socket
         run: |
-          if command -v docker &> /dev/null; then
-            echo "compose=docker compose" >> $GITHUB_OUTPUT
-          elif command -v podman &> /dev/null; then
-            echo "compose=podman-compose" >> $GITHUB_OUTPUT
-          else
-            echo "❌ No container runtime available"
-            exit 1
-          fi
+          podman system service --time=0 unix:///var/run/docker.sock &
+          sleep 2
 
       - name: Build frontend in container
         id: build
         run: |
-          ${{ steps.runtime.outputs.compose }} --profile ci run --rm build
+          docker compose --profile ci run --rm build
           echo "success=true" >> $GITHUB_OUTPUT
 
       - name: Verify build artifacts
@@ -236,28 +218,19 @@ jobs:
           name: frontend-dist
           path: listpkgs.nuros.front-end/dist/
 
-      - name: Install Docker (Podman compatibility)
+      - name: Set up Podman
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-              podman \
-              podman-docker || true
+          sudo apt-get install -y podman podman-docker
 
-      - name: Detect Container Runtime
-        id: runtime
+      - name: Start Podman socket
         run: |
-          if command -v docker &> /dev/null; then
-            echo "compose=docker compose" >> $GITHUB_OUTPUT
-          elif command -v podman &> /dev/null; then
-            echo "compose=podman-compose" >> $GITHUB_OUTPUT
-          else
-            echo "❌ No container runtime available"
-            exit 1
-          fi
+          podman system service --time=0 unix:///var/run/docker.sock &
+          sleep 2
 
       - name: Run tests in container
         run: |
-          ${{ steps.runtime.outputs.compose }} --profile ci run --rm test
+          docker compose --profile ci run --rm test
 
       - name: Upload test results
         if: always()

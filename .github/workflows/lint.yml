@@ -27,28 +27,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Docker (Podman compatibility)
+      - name: Set up Podman
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-              podman \
-              podman-docker || true
+          sudo apt-get install -y podman podman-docker
 
-      - name: Detect Container Runtime
-        id: runtime
+      - name: Start Podman socket
         run: |
-          if command -v docker &> /dev/null; then
-            echo "compose=docker compose" >> $GITHUB_OUTPUT
-          elif command -v podman &> /dev/null; then
-            echo "compose=podman-compose" >> $GITHUB_OUTPUT
-          else
-            echo "❌ No container runtime available"
-            exit 1
-          fi
+          podman system service --time=0 unix:///var/run/docker.sock &
+          sleep 2
 
       - name: Run ESLint + Stylelint in container
         run: |
-          ${{ steps.runtime.outputs.compose }} --profile ci run --rm lint
+          docker compose --profile ci run --rm lint
 
       - name: Create lint summary
         if: always()
