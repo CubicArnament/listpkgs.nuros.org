@@ -30,5 +30,8 @@ RUN pnpm install --frozen-lockfile --prefer-offline
 # Copy source code
 COPY listpkgs.nuros.front-end/ .
 
+# Set CI environment variable
+ENV CI=true
+
 # Default command - run both linters
 CMD ["sh", "-c", "pnpm lint"]
