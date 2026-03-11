@@ -84,8 +84,10 @@ jobs:
 
       - name: Start Podman socket
         run: |
-          podman system service --time=0 unix:///var/run/docker.sock &
-          sleep 2
+          sudo systemctl start podman.socket 2>/dev/null || \
+          (podman system service --time=0 unix:///var/run/docker.sock &)
+          sleep 3
+          sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
 
       - name: Build frontend in container
         run: |
@@ -116,8 +118,10 @@ jobs:
 
       - name: Start Podman socket
         run: |
-          podman system service --time=0 unix:///var/run/docker.sock &
-          sleep 2
+          sudo systemctl start podman.socket 2>/dev/null || \
+          (podman system service --time=0 unix:///var/run/docker.sock &)
+          sleep 3
+          sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
 
       - name: Run Playwright tests in container
         run: |
