@@ -28,7 +28,7 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ENV CI=true
 
-WORKDIR /app
+WORKDIR /app/listpkgs.nuros.front-end
 
 # Install pnpm
 RUN corepack enable pnpm && pnpm --version
@@ -40,12 +40,10 @@ COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.ya
 RUN pnpm install --frozen-lockfile --prefer-offline
 
 # Copy source code
-COPY listpkgs.nuros.front-end/ ./listpkgs.nuros.front-end/
+COPY listpkgs.nuros.front-end/ .
 
 # Copy public assets (repodata.json if exists)
-COPY --chown=node:node listpkgs.nuros.front-end/public/repodata.json ./listpkgs.nuros.front-end/public/
-
-WORKDIR /app/listpkgs.nuros.front-end
+COPY --chown=node:node public/repodata.json ./public/
 
 # Run tests
 CMD ["pnpm", "test"]
