@@ -1,15 +1,16 @@
 # =============================================================================
 # Lint Frontend Workflow
 # =============================================================================
-# Runs ESLint and Stylelint on every push and pull request.
-# Executes in a lightweight Docker container (lint_frontend.Dockerfile).
+# Runs ESLint and Stylelint on code changes.
+# Executes in a lightweight Podman container (lint_frontend.Dockerfile).
+#
+# Runs ONLY on pull requests (not on push).
+# For full PR tests (security, build, playwright), see pr.yml.
 # =============================================================================
 
 name: Lint Frontend
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -27,21 +28,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Podman
+      - name: Install Podman and podman-compose
         run: |
           sudo apt-get update
           sudo apt-get install -y podman podman-docker
 
-      - name: Start Podman socket
-        run: |
-          sudo systemctl start podman.socket 2>/dev/null || \
-          (podman system service --time=0 unix:///var/run/docker.sock &)
-          sleep 3
-          sudo chmod 666 /var/run/docker.sock 2>/dev/null || true
-
       - name: Run ESLint + Stylelint in container
         run: |
-          docker compose --profile ci run --rm lint
+          podman-compose --profile ci run --rm lint
 
       - name: Create lint summary
         if: always()
