@@ -215,42 +215,30 @@ export function PackageListComponent() {
 
 ## Field Reference
 
-| Field              | Type      | Required | Description            |
-| ------------------ | --------- | -------- | ---------------------- |
-| `name`             | string    | ✓        | Package identifier     |
-| `version`          | semver    | ✓        | Current version        |
-| `release`          | number    | ✗        | Release number (NurOS) |
-| `description`      | string    | ✓        | Short description      |
-| `home`             | URL       | ✗        | Project homepage       |
-| `license`          | string    | ✗        | License (SPDX)         |
-| `source`           | string    | ✓        | Repository name        |
-| `maintainer`       | string    | ✗        | Maintainer name        |
-| `maintainer_email` | email     | ✗        | Contact email          |
-| `category`         | string    | ✓        | Category/subsystem     |
-| `tags`             | array     | ✗        | Feature tags           |
-| `dependencies`     | array     | ✗        | Package dependencies   |
-| `url`              | URL       | ✗        | Repository URL         |
-| `checksum`         | sha256    | ✗        | File checksum          |
-| `size`             | bytes     | ✗        | Package size           |
-| `created`          | timestamp | ✗        | Creation date          |
-| `updated`          | timestamp | ✗        | Last update date       |
+| Field | Type | Required | Description | | ------------------ | --------- | -------- |
+---------------------- | | `name` | string | ✓ | Package identifier | | `version` | semver | ✓ |
+Current version | | `release` | number | ✗ | Release number (NurOS) | | `description` | string | ✓ |
+Short description | | `home` | URL | ✗ | Project homepage | | `license` | string | ✗ | License
+(SPDX) | | `source` | string | ✓ | Repository name | | `maintainer` | string | ✗ | Maintainer name |
+| `maintainer_email` | email | ✗ | Contact email | | `category` | string | ✓ | Category/subsystem |
+| `tags` | array | ✗ | Feature tags | | `dependencies` | array | ✗ | Package dependencies | | `url`
+| URL | ✗ | Repository URL | | `checksum` | sha256 | ✗ | File checksum | | `size` | bytes | ✗ |
+Package size | | `created` | timestamp | ✗ | Creation date | | `updated` | timestamp | ✗ | Last
+update date |
 
 ## Caching
 
 ### Cache Headers
 
-| Header          | Value                  |
-| --------------- | ---------------------- |
-| `Cache-Control` | `public, max-age=3600` |
-| `ETag`          | SHA-256 of content     |
-| `Last-Modified` | Update timestamp       |
+| Header | Value | | --------------- | ---------------------- | | `Cache-Control` |
+`public, max-age=3600` | | `ETag` | SHA-256 of content | | `Last-Modified` | Update timestamp |
 
 ### Best Practices
 
 1. **Respect Cache Headers**: Don't bypass ETag/Last-Modified checks
-2. **Implement Local Cache**: Cache data for 1 hour minimum
-3. **Use Compression**: Request with `Accept-Encoding: gzip`
-4. **Implement Retry Logic**: Handle temporary failures gracefully
+1. **Implement Local Cache**: Cache data for 1 hour minimum
+1. **Use Compression**: Request with `Accept-Encoding: gzip`
+1. **Implement Retry Logic**: Handle temporary failures gracefully
 
 ### Example Cache Implementation
 
@@ -291,13 +279,9 @@ const packages = await cache.fetch();
 
 ### HTTP Status Codes
 
-| Status | Meaning      | Action             |
-| ------ | ------------ | ------------------ |
-| 200    | OK           | Process response   |
-| 304    | Not Modified | Use cached data    |
-| 404    | Not Found    | Check URL          |
-| 500    | Server Error | Retry later        |
-| 503    | Unavailable  | Retry with backoff |
+| Status | Meaning | Action | | ------ | ------------ | ------------------ | | 200 | OK | Process
+response | | 304 | Not Modified | Use cached data | | 404 | Not Found | Check URL | | 500 | Server
+Error | Retry later | | 503 | Unavailable | Retry with backoff |
 
 ### Error Handling Example
 
@@ -378,7 +362,7 @@ Current version: **1.0**
 - Old fields never removed
 - Version indicator in response
 
----
+______________________________________________________________________
 
 See [Architecture](architecture.md) for system overview | [Frontend Guide](frontend-guide.md) for UI
 integration details

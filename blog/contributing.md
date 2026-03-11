@@ -19,14 +19,17 @@ you get started.
 Found a bug? Let us know:
 
 1. **Check existing issues** - Avoid duplicates
-2. **Create a detailed report**:
+
+1. **Create a detailed report**:
+
    - What you expected
    - What actually happened
    - Steps to reproduce
    - Environment (OS, browser, etc.)
    - Screenshots if applicable
 
-3. **Use bug template**:
+1. **Use bug template**:
+
    - Go to Issues → Report bug
    - Fill in the provided template
 
@@ -35,37 +38,37 @@ Found a bug? Let us know:
 Have an idea? We'd love to hear it:
 
 1. **Describe the feature clearly**
-2. **Explain the use case**
-3. **Provide examples if possible**
-4. **Note any implementation concerns**
+1. **Explain the use case**
+1. **Provide examples if possible**
+1. **Note any implementation concerns**
 
 ### 3. Improve Documentation
 
 Documentation improvements are always welcome:
 
 1. **Fix typos and errors**
-2. **Clarify unclear sections**
-3. **Add examples**
-4. **Translate to other languages** (future)
-5. **Improve architecture diagrams**
+1. **Clarify unclear sections**
+1. **Add examples**
+1. **Translate to other languages** (future)
+1. **Improve architecture diagrams**
 
 ### 4. Enhance the Frontend
 
 Join us in building features:
 
 1. **Review open issues** for ideas
-2. **Add UI enhancements**
-3. **Improve accessibility**
-4. **Optimize performance**
-5. **Fix known bugs**
+1. **Add UI enhancements**
+1. **Improve accessibility**
+1. **Optimize performance**
+1. **Fix known bugs**
 
 ### 5. Improve Package Metadata
 
 Help package maintainers:
 
 1. **File issues with inaccurate metadata**
-2. **Test and validate package data**
-3. **Help maintain categories and tags**
+1. **Test and validate package data**
+1. **Help maintain categories and tags**
 
 ## Development Setup
 
@@ -253,17 +256,20 @@ git push origin feature/your-feature-name
 ### Before Submitting
 
 1. **Code Quality**:
+
    - ✅ All tests pass
    - ✅ Code formatted with Prettier
    - ✅ Linted with ESLint (0 errors)
    - ✅ No console errors
 
-2. **Documentation**:
+1. **Documentation**:
+
    - ✅ README updated if needed
    - ✅ Comments added for complex code
    - ✅ API changes documented
 
-3. **Testing**:
+1. **Testing**:
+
    - ✅ New features have tests
    - ✅ Bug fixes have regression tests
    - ✅ All 30 tests pass locally
@@ -306,16 +312,19 @@ Fixes #(issue number)
 ### Review Process
 
 1. **Automated Checks**:
+
    - GitHub Actions runs tests
    - Linting checks pass
    - Build succeeds
 
-2. **Code Review**:
+1. **Code Review**:
+
    - At least one approval required
    - Maintainers provide feedback
    - Address review comments
 
-3. **Merge**:
+1. **Merge**:
+
    - Squash commits (for bug fixes)
    - Create merge commit (for features)
    - Delete branch after merge
@@ -417,9 +426,9 @@ All documentation in `blog/`:
 Instead:
 
 1. Email security concerns to maintainers
-2. Provide detailed vulnerability description
-3. Suggest remediation if possible
-4. Allow time for fix before public disclosure
+1. Provide detailed vulnerability description
+1. Suggest remediation if possible
+1. Allow time for fix before public disclosure
 
 ## Getting Help
 
@@ -441,6 +450,6 @@ Contributors are recognized:
 
 By contributing, you agree your contributions are licensed under the MIT License.
 
----
+______________________________________________________________________
 
 Thank you for contributing! 🎉

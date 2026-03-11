@@ -35,9 +35,9 @@ See [API Reference](api-reference.md) for usage examples.
 ### How do I search for packages?
 
 1. Use the search bar at the top
-2. Type a package name or description
-3. Results update in real-time
-4. Click a package to see details
+1. Type a package name or description
+1. Results update in real-time
+1. Click a package to see details
 
 ### What's the difference between the view modes?
 
@@ -48,9 +48,9 @@ See [API Reference](api-reference.md) for usage examples.
 ### How do I filter packages?
 
 1. Click the filter icon
-2. Select criteria (source, category, etc.)
-3. Results update automatically
-4. Click "Clear filters" to reset
+1. Select criteria (source, category, etc.)
+1. Results update automatically
+1. Click "Clear filters" to reset
 
 ### Why doesn't my package appear?
 
@@ -114,26 +114,29 @@ Supported browsers:
 ### The page is slow, what should I do?
 
 1. Check your internet connection
-2. Hard refresh: Ctrl+Shift+R or Cmd+Shift+R
-3. Clear browser cache
-4. Try a different browser
-5. Reduce browser zoom to 90%
+1. Hard refresh: Ctrl+Shift+R or Cmd+Shift+R
+1. Clear browser cache
+1. Try a different browser
+1. Reduce browser zoom to 90%
 
 ## Technical Questions
 
 ### How does the system work?
 
 1. **Update List** (every 6 hours):
+
    - Scan NurOS repositories
    - Collect metadata
    - Generate packages.json
 
-2. **Build Frontend**:
+1. **Build Frontend**:
+
    - Download latest data
    - Build with Vite
    - Embed data in app
 
-3. **Deploy**:
+1. **Deploy**:
+
    - Upload to GitHub Pages
    - Available at listpkgs.nuros.org
 
@@ -175,7 +178,7 @@ Varies by number of repositories, typically:
 
 - **Size**: 500KB - 2MB (compressed)
 - **Packages**: 1000 - 5000+
-- **Update time**: <1 minute
+- **Update time**: \<1 minute
 
 ### Can I cache the data?
 
@@ -195,10 +198,10 @@ See [API Reference](api-reference.md) for cache examples.
 **Try**:
 
 1. Check spelling (case-insensitive)
-2. Use simpler search term
-3. Clear any filters
-4. Refresh the page
-5. Wait for next update (6-hour schedule)
+1. Use simpler search term
+1. Clear any filters
+1. Refresh the page
+1. Wait for next update (6-hour schedule)
 
 ### Package details show incomplete info
 
@@ -215,9 +218,9 @@ See [API Reference](api-reference.md) for cache examples.
 **Fixes**:
 
 1. Try different browser
-2. Disable Dark Reader extension
-3. Check system dark mode setting
-4. Clear browser cache
+1. Disable Dark Reader extension
+1. Check system dark mode setting
+1. Clear browser cache
 
 ### Getting 404 when accessing subpath
 
@@ -226,37 +229,37 @@ See [API Reference](api-reference.md) for cache examples.
 **Fixes**:
 
 1. Hard refresh browser
-2. Clear browser cache
-3. Try different browser
-4. Check GitHub Pages settings
+1. Clear browser cache
+1. Try different browser
+1. Check GitHub Pages settings
 
 ### Site shows blank page
 
 **Troubleshoot**:
 
 1. Open browser console (F12)
-2. Check for errors
-3. Check JavaScript is enabled
-4. Try private/incognito window
-5. Wait for automatic update
+1. Check for errors
+1. Check JavaScript is enabled
+1. Try private/incognito window
+1. Wait for automatic update
 
 ## Deployment Questions
 
 ### How do I deploy changes?
 
 1. Push to main branch
-2. GitHub Actions auto-deploys
-3. Check Actions tab for status
-4. Live in ~5 minutes
+1. GitHub Actions auto-deploys
+1. Check Actions tab for status
+1. Live in ~5 minutes
 
 ### Can I trigger deployment manually?
 
 Yes! In GitHub:
 
 1. Go to Actions tab
-2. Select workflow
-3. Click "Run workflow"
-4. Confirm
+1. Select workflow
+1. Click "Run workflow"
+1. Confirm
 
 Or with GitHub CLI:
 
@@ -278,9 +281,9 @@ Typical timeline:
 Check logs:
 
 1. Go to Actions tab
-2. Click failed workflow
-3. Scroll to failed step
-4. Read error message
+1. Click failed workflow
+1. Scroll to failed step
+1. Read error message
 
 Common fixes:
 
@@ -295,26 +298,26 @@ Common fixes:
 See [Contributing Guide](contributing.md) for:
 
 1. Development setup
-2. Code style guidelines
-3. PR process
-4. Commit message format
+1. Code style guidelines
+1. PR process
+1. Commit message format
 
 ### Can I add a new package?
 
 **To add your package**:
 
 1. Create repository in NurOS-Packages org
-2. Add `metadata.json` with package info
-3. Wait for next list update (6 hours)
-4. Package appears in search
+1. Add `metadata.json` with package info
+1. Wait for next list update (6 hours)
+1. Package appears in search
 
 See package metadata template in contributing guide.
 
 ### How do I report bugs?
 
 1. Check [GitHub Issues](https://github.com/NurOS-Linux/listpkgs.nuros.org/issues)
-2. Ensure it's not already reported
-3. Create new issue with:
+1. Ensure it's not already reported
+1. Create new issue with:
    - What happened
    - What you expected
    - Steps to reproduce
@@ -325,11 +328,11 @@ See package metadata template in contributing guide.
 Create GitHub issue with:
 
 1. Feature description
-2. Use case/why it's needed
-3. Example or mockup if possible
-4. Any implementation notes
+1. Use case/why it's needed
+1. Example or mockup if possible
+1. Any implementation notes
 
----
+______________________________________________________________________
 
 **Still have questions?**
 

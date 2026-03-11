@@ -232,16 +232,16 @@ interface FilterState {
 ### For Users
 
 1. Use specific search terms
-2. Filter before searching for best results
-3. Dark mode slightly faster (less rendering)
-4. Cloud sync: Use browser cache for faster loads
+1. Filter before searching for best results
+1. Dark mode slightly faster (less rendering)
+1. Cloud sync: Use browser cache for faster loads
 
 ### For Developers
 
 1. SCSS module structure reduces CSS size
-2. SolidJS fine-grained reactivity is efficient
-3. No virtual scrolling needed yet (optimized for <5000 packages)
-4. Client-side filtering is faster than server calls
+1. SolidJS fine-grained reactivity is efficient
+1. No virtual scrolling needed yet (optimized for \<5000 packages)
+1. Client-side filtering is faster than server calls
 
 ## Accessibility
 
@@ -295,12 +295,12 @@ pnpm preview
 ### Adding New Features
 
 1. Create component in `src/components/`
-2. Create styles in `src/styles/components/`
-3. Import in `src/styles/index.scss`
-4. Use in App.tsx
-5. Test locally
-6. Format and lint
-7. Commit with descriptive message
+1. Create styles in `src/styles/components/`
+1. Import in `src/styles/index.scss`
+1. Use in App.tsx
+1. Test locally
+1. Format and lint
+1. Commit with descriptive message
 
 ### Testing
 
@@ -331,14 +331,12 @@ pnpm test:ui
 
 ## Troubleshooting UI Issues
 
-| Issue                   | Solution                                   |
-| ----------------------- | ------------------------------------------ |
-| Search not responsive   | Check browser cache, try Ctrl+Shift+R      |
-| Dark mode not working   | Enable in header, check system preferences |
-| Cards cut off on mobile | Reduce browser zoom to 90%                 |
-| Sidebar overlapping     | Use List view, reduce window width         |
-| Text unreadable         | Increase font size in browser settings     |
+| Issue | Solution | | ----------------------- | ------------------------------------------ | |
+Search not responsive | Check browser cache, try Ctrl+Shift+R | | Dark mode not working | Enable in
+header, check system preferences | | Cards cut off on mobile | Reduce browser zoom to 90% | |
+Sidebar overlapping | Use List view, reduce window width | | Text unreadable | Increase font size in
+browser settings |
 
----
+______________________________________________________________________
 
 Next: [API Reference](api-reference.md) | Back: [Architecture](architecture.md)

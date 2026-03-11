@@ -32,12 +32,12 @@ GitHub Repository
 **Steps**:
 
 1. Checkout repository
-2. Authenticate GitHub CLI
-3. Fetch metadata from NurOS-Packages organization
-4. Generate `packages.json`
-5. Create checksum (`packages.json.sha256`)
-6. Upload as artifact
-7. Create deployment summary
+1. Authenticate GitHub CLI
+1. Fetch metadata from NurOS-Packages organization
+1. Generate `packages.json`
+1. Create checksum (`packages.json.sha256`)
+1. Upload as artifact
+1. Create deployment summary
 
 **Triggers**:
 
@@ -63,15 +63,15 @@ GitHub Repository
 **Steps**:
 
 1. Checkout code
-2. Download package data artifact
-3. Verify source data exists
-4. Install pnpm 9.x
-5. Setup Node.js 22
-6. Install dependencies (frozen lockfile)
-7. Build with Vite
-8. Verify build artifacts
-9. Upload as artifact
-10. Provide build summary
+1. Download package data artifact
+1. Verify source data exists
+1. Install pnpm 9.x
+1. Setup Node.js 22
+1. Install dependencies (frozen lockfile)
+1. Build with Vite
+1. Verify build artifacts
+1. Upload as artifact
+1. Provide build summary
 
 **Build configuration** (`vite.config.ts`):
 
@@ -98,11 +98,11 @@ GitHub Repository
 **Steps**:
 
 1. Download build artifact
-2. Verify deployment contents
-3. Configure GitHub Pages
-4. Upload pages artifact
-5. Deploy to GitHub Pages
-6. Create deployment summary
+1. Verify deployment contents
+1. Configure GitHub Pages
+1. Upload pages artifact
+1. Deploy to GitHub Pages
+1. Create deployment summary
 
 **Result**:
 
@@ -114,13 +114,14 @@ GitHub Repository
 ### Trigger Workflows Manually
 
 1. **GitHub Web UI**:
+
    - Go to Actions tab
    - Select workflow (e.g., "Build Frontend")
    - Click "Run workflow"
    - Confirm branch and options
    - Click "Run workflow"
 
-2. **GitHub CLI**:
+1. **GitHub CLI**:
 
    ```bash
    # Trigger update list
@@ -133,7 +134,8 @@ GitHub Repository
    gh workflow run deploy_on_pages.yml -r main
    ```
 
-3. **Full Pipeline**:
+1. **Full Pipeline**:
+
    ```bash
    # Run all workflows in sequence
    gh workflow run update-list.yml -r main
@@ -145,10 +147,9 @@ GitHub Repository
 
 ### Required Secrets
 
-| Secret                   | Purpose                       | Where                 |
-| ------------------------ | ----------------------------- | --------------------- |
-| `GITHUB_TOKEN`           | GitHub Actions authentication | Automatic (GitHub)    |
-| (Optional) Custom domain | CNAME for custom domain       | GitHub Pages settings |
+| Secret | Purpose | Where | | ------------------------ | ----------------------------- |
+--------------------- | | `GITHUB_TOKEN` | GitHub Actions authentication | Automatic (GitHub) | |
+(Optional) Custom domain | CNAME for custom domain | GitHub Pages settings |
 
 ### Configuration Files
 
@@ -175,16 +176,18 @@ export default {
 ### Check Deployment Status
 
 1. **GitHub Actions Dashboard**:
+
    - Go to Actions tab
    - View workflow run details
    - Check logs for errors
 
-2. **Deployment History**:
+1. **Deployment History**:
+
    - Settings → Pages
    - View deployment history
    - Check GitHub status page
 
-3. **Package List Updates**:
+1. **Package List Updates**:
 
    ```bash
    # Check latest workflow run
@@ -203,10 +206,10 @@ export default {
 **Solutions**:
 
 1. Check Node.js version is 22
-2. Verify `pnpm-lock.yaml` is committed
-3. Run `pnpm install --frozen-lockfile` locally
-4. Check for TypeScript errors: `pnpm lint`
-5. Review logs for specific errors
+1. Verify `pnpm-lock.yaml` is committed
+1. Run `pnpm install --frozen-lockfile` locally
+1. Check for TypeScript errors: `pnpm lint`
+1. Review logs for specific errors
 
 ### Deployment Not Updated
 
@@ -215,10 +218,10 @@ export default {
 **Solutions**:
 
 1. Hard refresh: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
-2. Clear browser cache
-3. Check GitHub Pages settings
-4. Verify workflow completed successfully
-5. Check DNS propagation (if custom domain)
+1. Clear browser cache
+1. Check GitHub Pages settings
+1. Verify workflow completed successfully
+1. Check DNS propagation (if custom domain)
 
 ### Package Data Missing
 
@@ -227,10 +230,10 @@ export default {
 **Solutions**:
 
 1. Check `update-list.yml` logs
-2. Verify GitHub token permission
-3. Ensure repositories in organization are accessible
-4. Check for permission issues
-5. Manually trigger workflow
+1. Verify GitHub token permission
+1. Ensure repositories in organization are accessible
+1. Check for permission issues
+1. Manually trigger workflow
 
 ### 404 on Subpath
 
@@ -239,9 +242,9 @@ export default {
 **Solutions**:
 
 1. Check `vite.config.ts` base path setting
-2. Verify GitHub Pages source is GitHub Actions
-3. Check artifact upload step succeeded
-4. Clear CDN cache (if applicable)
+1. Verify GitHub Pages source is GitHub Actions
+1. Check artifact upload step succeeded
+1. Clear CDN cache (if applicable)
 
 ## Performance & Optimization
 
@@ -299,7 +302,7 @@ If deployment breaks live site:
    gh workflow run build_frontend.yml -r main
    ```
 
-2. **Revert Code**:
+1. **Revert Code**:
 
    ```bash
    # If code change caused issue
@@ -308,7 +311,7 @@ If deployment breaks live site:
    # Workflows auto-trigger
    ```
 
-3. **Manual Rollback**:
+1. **Manual Rollback**:
 
    ```bash
    # Checkout previous working version
@@ -317,7 +320,8 @@ If deployment breaks live site:
    git push
    ```
 
-4. **GitHub Pages Rollback**:
+1. **GitHub Pages Rollback**:
+
    - Go to Settings → Pages
    - View deployment history
    - Click "Restore" on previous deployment
@@ -376,7 +380,7 @@ pages: write # Deploy pages
 id-token: write # OIDC token
 ```
 
----
+______________________________________________________________________
 
 See [Architecture](architecture.md) for system overview | [Contributing](contributing.md) for
 development guide

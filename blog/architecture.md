@@ -5,8 +5,8 @@
 The NurOS Package Search System consists of three main components:
 
 1. **Package List Generator** - Aggregates package metadata
-2. **Frontend Application** - Web interface for searching
-3. **Deployment Pipeline** - Automated CI/CD
+1. **Frontend Application** - Web interface for searching
+1. **Deployment Pipeline** - Automated CI/CD
 
 ## System Flow Diagram
 
@@ -106,14 +106,14 @@ src/
 **Workflow sequence**:
 
 1. **Trigger**: Package list updated or manual dispatch
-2. **Build**:
+1. **Build**:
    - Checkout code
    - Download latest package data
    - Install dependencies (`pnpm`)
    - Run `pnpm build`
    - Verify artifacts
    - Upload as artifact
-3. **Deploy**:
+1. **Deploy**:
    - Download build artifact
    - Configure GitHub Pages
    - Upload pages artifact
@@ -159,17 +159,11 @@ Rendered in UI
 
 ## Technology Stack
 
-| Component           | Technology     | Version |
-| ------------------- | -------------- | ------- |
-| **Language**        | TypeScript     | 5.9.3   |
-| **Framework**       | SolidJS        | 1.9.10  |
-| **Build Tool**      | Vite           | 7.3.1   |
-| **Styling**         | SCSS           | Latest  |
-| **Package Manager** | pnpm           | 9.x     |
-| **Runtime**         | Node.js        | 22      |
-| **Testing**         | Playwright     | 1.48.2  |
-| **Hosting**         | GitHub Pages   | -       |
-| **CI/CD**           | GitHub Actions | -       |
+| Component | Technology | Version | | ------------------- | -------------- | ------- | |
+**Language** | TypeScript | 5.9.3 | | **Framework** | SolidJS | 1.9.10 | | **Build Tool** | Vite |
+7.3.1 | | **Styling** | SCSS | Latest | | **Package Manager** | pnpm | 9.x | | **Runtime** | Node.js
+| 22 | | **Testing** | Playwright | 1.48.2 | | **Hosting** | GitHub Pages | - | | **CI/CD** | GitHub
+Actions | - |
 
 ## Performance Considerations
 
@@ -226,6 +220,6 @@ Rendered in UI
 - Scheduled workflow status
 - Error summaries in step summary
 
----
+______________________________________________________________________
 
 See [Deployment Guide](deployment.md) for detailed deployment information.

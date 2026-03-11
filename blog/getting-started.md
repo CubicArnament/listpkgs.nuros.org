@@ -17,8 +17,8 @@ You can access the package search at:
 ### Basic Search
 
 1. Use the search bar at the top of the page
-2. Type the package name or description
-3. Results update in real-time as you type
+1. Type the package name or description
+1. Results update in real-time as you type
 
 ### Filtering Results
 
@@ -69,20 +69,16 @@ Click on any package to see:
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action                 |
-| -------- | ---------------------- |
-| `/`      | Focus search bar       |
-| `D`      | Toggle dark/light mode |
-| `Enter`  | Open selected package  |
-| `Esc`    | Clear search           |
+| Shortcut | Action | | -------- | ---------------------- | | `/` | Focus search bar | | `D` |
+Toggle dark/light mode | | `Enter` | Open selected package | | `Esc` | Clear search |
 
 ## Tips & Tricks
 
 1. **Use quotes for exact matches**: `"package name"`
-2. **Search descriptions**: Type package purpose
-3. **Multiple filters**: Combine source + category for narrow results
-4. **JSON view**: Click the JSON icon for complete metadata
-5. **Dark mode**: Auto-respects system preferences
+1. **Search descriptions**: Type package purpose
+1. **Multiple filters**: Combine source + category for narrow results
+1. **JSON view**: Click the JSON icon for complete metadata
+1. **Dark mode**: Auto-respects system preferences
 
 ## Troubleshooting
 
@@ -112,7 +108,7 @@ Click on any package to see:
 - Read [Frontend Guide](frontend-guide.md) for detailed UI information
 - Check [API Reference](api-reference.md) to integrate packages programmatically
 
----
+______________________________________________________________________
 
 **Need Help?** See [FAQ](faq.md) or visit the
 [GitHub Issues](https://github.com/NurOS-Linux/listpkgs.nuros.org/issues)

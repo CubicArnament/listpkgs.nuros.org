@@ -4,9 +4,8 @@
   "private": true,
   "description": "Documentation for listpkgs.nuros.org",
   "scripts": {
-    "format": "prettier --write \"**/*.md\""
+    "format": "mdformat --wrap 100 .",
+    "format:check": "mdformat --wrap 100 --check ."
   },
-  "devDependencies": {
-    "prettier": "^3.0.0"
-  }
+  "devDependencies": {}
 }

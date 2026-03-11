@@ -32,36 +32,36 @@ blog/
 ### Step 1: Create GitBook Account
 
 1. Go to [https://app.gitbook.com/](https://app.gitbook.com/)
-2. Sign up or log in with your GitHub account
-3. Create a new **Space** for this documentation
+1. Sign up or log in with your GitHub account
+1. Create a new **Space** for this documentation
 
 ### Step 2: Connect GitHub Repository
 
 1. In your GitBook Space, go to **Settings** → **Integrations**
-2. Select **GitHub** integration
-3. Click **Connect Repository**
-4. Authorize GitBook to access your GitHub account
-5. Select repository: `NurOS-Linux/listpkgs.nuros.org`
+1. Select **GitHub** integration
+1. Click **Connect Repository**
+1. Authorize GitBook to access your GitHub account
+1. Select repository: `NurOS-Linux/listpkgs.nuros.org`
 
 ### Step 3: Configure Documentation Source
 
 1. Set the **source folder** to: `blog/`
-2. GitBook will automatically detect `SUMMARY.md` for navigation
-3. Verify the file structure is correct
+1. GitBook will automatically detect `SUMMARY.md` for navigation
+1. Verify the file structure is correct
 
 ### Step 4: Enable Auto-Sync
 
 1. In GitHub integration settings, enable **Auto-sync**
-2. Set branch to: `main`
-3. Configure sync trigger: on push to main branch
-4. Save settings
+1. Set branch to: `main`
+1. Configure sync trigger: on push to main branch
+1. Save settings
 
 ### Step 5: Configure Custom Domain (Optional)
 
 1. Go to **Settings** → **Domains**
-2. Add your custom domain (e.g., `docs.nuros.org`)
-3. Configure DNS records as instructed by GitBook
-4. Wait for DNS propagation (up to 24 hours)
+1. Add your custom domain (e.g., `docs.nuros.org`)
+1. Configure DNS records as instructed by GitBook
+1. Wait for DNS propagation (up to 24 hours)
 
 ## GitHub Actions Workflow
 
@@ -76,10 +76,10 @@ The workflow `.github/workflows/sync-gitbook.yml` automatically:
 To manually trigger a sync:
 
 1. Go to **Actions** tab in GitHub
-2. Select **Sync Documentation to GitBook** workflow
-3. Click **Run workflow**
-4. Select branch: `main`
-5. Click **Run workflow**
+1. Select **Sync Documentation to GitBook** workflow
+1. Click **Run workflow**
+1. Select branch: `main`
+1. Click **Run workflow**
 
 ## GitBook Features
 
@@ -131,22 +131,22 @@ After setup, documentation will be available at:
 ### Sync Not Working
 
 1. Check GitHub integration is enabled in GitBook
-2. Verify repository permissions
-3. Check workflow logs in GitHub Actions
-4. Ensure `SUMMARY.md` and `book.json` are present
+1. Verify repository permissions
+1. Check workflow logs in GitHub Actions
+1. Ensure `SUMMARY.md` and `book.json` are present
 
 ### Broken Links
 
 1. All internal links should be relative (e.g., `architecture.md`)
-2. Don't use `./` prefix in links
-3. Use `.md` extension in links
-4. Check GitBook preview for broken link warnings
+1. Don't use `./` prefix in links
+1. Use `.md` extension in links
+1. Check GitBook preview for broken link warnings
 
 ### Styling Issues
 
 1. Add custom CSS to `styles.css`
-2. GitBook has limited CSS customization
-3. Use GitBook's built-in theming options
+1. GitBook has limited CSS customization
+1. Use GitBook's built-in theming options
 
 ## Support
 

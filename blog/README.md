@@ -1,6 +1,6 @@
----
-cover: ./cover.png
----
+______________________________________________________________________
+
+## cover: ./cover.png
 
 # NurOS Package List Documentation
 
