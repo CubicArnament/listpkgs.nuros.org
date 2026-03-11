@@ -49,11 +49,6 @@ docs
 blog/dist
 blog/.vitepress/dist
 
-# Docker
-docker
-docker-compose*.yml
-Dockerfile
-
 # CI/CD
 .github/workflows
 .gitlab-ci.yml

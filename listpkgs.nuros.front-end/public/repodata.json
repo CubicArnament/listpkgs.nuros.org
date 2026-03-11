@@ -1,146 +1,815 @@
 {
-  "bash": {
-    "name": "bash",
-    "version": "5.2.21-1",
-    "type": "runtime",
-    "architecture": "x86_64",
-    "description": "GNU Bourne Again SHell - command interpreter",
-    "maintainer": "NurOS Team",
-    "license": "GPL-3.0",
-    "homepage": "https://www.gnu.org/software/bash/",
-    "dependencies": ["glibc", "ncurses"],
+  "adwaita-fonts@all": {
+    "name": "adwaita-fonts",
+    "version": "48.2",
+    "type": "misc",
+    "architecture": "all",
+    "description": "The fonts for GNOME.",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "OFL",
+    "tags": [
+      "fonts",
+      "gnome",
+      "adwaita",
+      "typography"
+    ],
+    "homepage": "https://gitlab.gnome.org/GNOME/adwaita-fonts",
+    "dependencies": [],
     "conflicts": [],
-    "tags": ["shell", "terminal", "core"],
-    "provides": ["sh"],
-    "replaces": [],
-    "conf": [],
-    "_source_repo": "core",
-    "_last_updated": "2025-01-15"
-  },
-  "coreutils": {
-    "name": "coreutils",
-    "version": "9.4-2",
-    "type": "runtime",
-    "architecture": "x86_64",
-    "description": "GNU core utilities - essential file, shell and text manipulation tools",
-    "maintainer": "NurOS Team",
-    "license": "GPL-3.0",
-    "homepage": "https://www.gnu.org/software/coreutils/",
-    "dependencies": ["glibc"],
-    "conflicts": [],
-    "tags": ["core", "system", "utilities"],
-    "provides": ["ls", "cat", "cp", "mv", "rm"],
-    "replaces": [],
-    "conf": [],
-    "_source_repo": "core",
-    "_last_updated": "2025-02-01"
-  },
-  "firefox": {
-    "name": "firefox",
-    "version": "122.0-1",
-    "type": "gui",
-    "architecture": "x86_64",
-    "description": "Mozilla Firefox web browser",
-    "maintainer": "NurOS Team",
-    "license": "MPL-2.0",
-    "homepage": "https://www.mozilla.org/firefox/",
-    "dependencies": ["gtk3", "dbus", "alsa-lib"],
-    "conflicts": ["firefox-esr"],
-    "tags": ["browser", "web", "gui"],
-    "provides": ["www-browser"],
-    "replaces": [],
-    "conf": [],
-    "_source_repo": "apps",
-    "_last_updated": "2025-02-20"
-  },
-  "git": {
-    "name": "git",
-    "version": "2.44.0-1",
-    "type": "devel",
-    "architecture": "x86_64",
-    "description": "Distributed version control system",
-    "maintainer": "NurOS Team",
-    "license": "GPL-2.0",
-    "homepage": "https://git-scm.com/",
-    "dependencies": ["openssl", "curl", "perl"],
-    "conflicts": [],
-    "tags": ["vcs", "development", "git"],
     "provides": [],
     "replaces": [],
     "conf": [],
-    "_source_repo": "devel",
-    "_last_updated": "2025-02-10"
+    "_source_repo": "https://github.com/NurOS-Packages/adwaita-fonts",
+    "_last_updated": "2025-10-26T10:27:02Z"
   },
-  "nginx": {
-    "name": "nginx",
-    "version": "1.25.4-1",
-    "type": "server",
+  "bsdtar@x86_64": {
+    "name": "bsdtar",
+    "version": "3.7.7",
+    "type": "binary",
     "architecture": "x86_64",
-    "description": "High-performance HTTP server and reverse proxy",
-    "maintainer": "NurOS Team",
+    "description": "Multi-format archive and compression library with bsdtar/bsdcpio tools",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
     "license": "BSD-2-Clause",
-    "homepage": "https://nginx.org/",
-    "dependencies": ["openssl", "pcre2", "zlib"],
-    "conflicts": ["apache"],
-    "tags": ["server", "web", "http"],
-    "provides": ["httpd"],
-    "replaces": [],
-    "conf": ["/etc/nginx/nginx.conf"],
-    "_source_repo": "server",
-    "_last_updated": "2025-01-28"
-  },
-  "python3": {
-    "name": "python3",
-    "version": "3.12.2-1",
-    "type": "runtime",
-    "architecture": "x86_64",
-    "description": "Python programming language interpreter",
-    "maintainer": "NurOS Team",
-    "license": "PSF-2.0",
-    "homepage": "https://www.python.org/",
-    "dependencies": ["libffi", "zlib", "sqlite"],
+    "tags": [
+      "archive",
+      "tar",
+      "compression",
+      "libarchive",
+      "bsdtar",
+      "utility"
+    ],
+    "homepage": "https://www.libarchive.org/",
+    "dependencies": [
+      "zlib",
+      "bzip2",
+      "xz",
+      "lz4",
+      "zstd",
+      "openssl"
+    ],
     "conflicts": [],
-    "tags": ["python", "programming", "runtime"],
-    "provides": ["python"],
+    "provides": [
+      "libarchive",
+      "tar-alternative"
+    ],
     "replaces": [],
     "conf": [],
-    "_source_repo": "lang",
-    "_last_updated": "2025-02-05"
+    "_source_repo": "https://github.com/NurOS-Packages/bsdtar",
+    "_last_updated": "2025-10-26T10:55:20Z"
   },
-  "vim": {
-    "name": "vim",
-    "version": "9.1.0-1",
-    "type": "editor",
+  "bzip2@x86_64": {
+    "name": "bzip2",
+    "version": "1.0.8",
+    "type": "binary",
     "architecture": "x86_64",
-    "description": "Vi IMproved - enhanced vi editor",
-    "maintainer": "NurOS Team",
-    "license": "VIM",
-    "homepage": "https://www.vim.org/",
-    "dependencies": ["ncurses", "python3"],
+    "description": "High-quality data compressor with bzip2 compression library",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "BSD-4-Clause",
+    "tags": [
+      "compression",
+      "bzip2",
+      "library",
+      "archiver",
+      "utility"
+    ],
+    "homepage": "https://sourceware.org/bzip2/",
+    "dependencies": [
+      "libc"
+    ],
     "conflicts": [],
-    "tags": ["editor", "vim", "terminal"],
-    "provides": ["vi", "editor"],
+    "provides": [
+      "libbz2",
+      "bzip2-compressor"
+    ],
     "replaces": [],
     "conf": [],
-    "_source_repo": "apps",
-    "_last_updated": "2025-01-20"
+    "_source_repo": "https://github.com/NurOS-Packages/bzip2",
+    "_last_updated": "2025-10-26T16:41:58Z"
   },
-  "zsh": {
-    "name": "zsh",
-    "version": "5.9-1",
-    "type": "runtime",
+  "chorus@x86_64": {
+    "name": "chorus",
+    "version": "1.0.2",
+    "type": "binary",
     "architecture": "x86_64",
-    "description": "Z shell - extended Bourne shell with improvements",
-    "maintainer": "NurOS Team",
+    "description": "Alternative build system written in Go",
+    "maintainer": "APGer <anmitali198@gmail.com>",
     "license": "MIT",
-    "homepage": "https://www.zsh.org/",
-    "dependencies": ["glibc", "pcre2"],
+    "tags": [
+      "build",
+      "system",
+      "go"
+    ],
+    "homepage": "https://github.com/z3nnix/chorus",
+    "dependencies": [],
     "conflicts": [],
-    "tags": ["shell", "terminal", "zsh"],
-    "provides": ["sh"],
+    "provides": [],
     "replaces": [],
     "conf": [],
-    "_source_repo": "core",
-    "_last_updated": "2025-02-12"
+    "_source_repo": "https://github.com/NurOS-Packages/chorus",
+    "_last_updated": "2026-02-03T04:57:25Z"
+  },
+  "coreutils@x86_64": {
+    "name": "coreutils",
+    "version": "9.9",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "GNU core utilities - basic file, shell and text manipulation utilities",
+    "maintainer": "APGer <anmitali198@gmail.com>",
+    "license": "GPL-3.0",
+    "tags": [
+      "gnu",
+      "utilities",
+      "core",
+      "shell",
+      "posix"
+    ],
+    "homepage": "https://www.gnu.org/software/coreutils/",
+    "dependencies": [
+      "libc6",
+      "libacl1",
+      "libattr1",
+      "libgmp10",
+      "libselinux1",
+      "libcap2"
+    ],
+    "conflicts": [
+      "uutils-coreutils",
+      "uutils",
+      "toybox",
+      "sbase"
+    ],
+    "provides": [
+      "coreutils"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/coreutils",
+    "_last_updated": "2026-02-04T06:13:31Z"
+  },
+  "dracut-apg@x86_64": {
+    "name": "dracut-apg",
+    "version": "RHEL-7.2",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Dracut initramfs infrastructure with APG patches.",
+    "maintainer": "XCubicArnament",
+    "license": "GPL-2.0-or-later",
+    "tags": [
+      "dracut",
+      "initramfs",
+      "apg"
+    ],
+    "homepage": "https://github.com/dracut-ng/dracut-ng",
+    "dependencies": [
+      "bash",
+      "cpio",
+      "coreutils",
+      "diffutils",
+      "findutils",
+      "gawk",
+      "grep",
+      "gzip",
+      "kmod",
+      "sed",
+      "systemd",
+      "tar",
+      "util-linux"
+    ],
+    "conflicts": [],
+    "provides": [
+      "dracut",
+      "mkinitrd"
+    ],
+    "replaces": [],
+    "conf": [
+      "/etc/dracut.conf"
+    ],
+    "_source_repo": "https://github.com/NurOS-Packages/dracut",
+    "_last_updated": "2025-12-06T11:04:08Z"
+  },
+  "fastfetch@aarch64": {
+    "name": "fastfetch",
+    "version": "2.59.0",
+    "type": "binary",
+    "architecture": "aarch64",
+    "description": "Fast system information tool",
+    "maintainer": "APGer <anmitali198@gmail.com>",
+    "license": "MIT",
+    "tags": [
+      "system",
+      "info",
+      "cli",
+      "neofetch",
+      "nuros"
+    ],
+    "homepage": "https://github.com/fastfetch-cli/fastfetch",
+    "dependencies": [
+      "libvulkan1",
+      "libwayland-client0",
+      "libxcb-randr0",
+      "libxrandr2",
+      "libdbus-1-3",
+      "libpci3",
+      "libdrm2",
+      "libpulse0"
+    ],
+    "conflicts": [],
+    "provides": [],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/fastfetch-aarch64",
+    "_last_updated": "2026-02-20T10:00:51Z"
+  },
+  "fastfetch@x86_64": {
+    "name": "fastfetch",
+    "version": "2.59.0",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Fast system information tool",
+    "maintainer": "APGer <anmitali198@gmail.com>",
+    "license": "MIT",
+    "tags": [
+      "system",
+      "info",
+      "cli",
+      "neofetch",
+      "nuros"
+    ],
+    "homepage": "https://github.com/fastfetch-cli/fastfetch",
+    "dependencies": [
+      "libvulkan1",
+      "libwayland-client0",
+      "libxcb-randr0",
+      "libxrandr2",
+      "libdbus-1-3",
+      "libpci3",
+      "libdrm2",
+      "libpulse0"
+    ],
+    "conflicts": [],
+    "provides": [],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/fastfetch",
+    "_last_updated": "2026-02-20T09:59:15Z"
+  },
+  "gettext@x86_64": {
+    "name": "gettext",
+    "version": "0.25",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "GNU internationalization utilities for multi-lingual message support",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "GPL-3.0",
+    "tags": [
+      "gettext",
+      "i18n",
+      "l10n",
+      "internationalization",
+      "localization",
+      "translation",
+      "system"
+    ],
+    "homepage": "https://www.gnu.org/software/gettext/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "gettext"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/gettext",
+    "_last_updated": "2025-10-26T06:21:37Z"
+  },
+  "gnu-hello@x86_64": {
+    "name": "gnu-hello",
+    "version": "2.12.1",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "GNU Hello - программа, которая выводит 'Hello, world!' на разных языках",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "GPL-3.0",
+    "tags": [
+      "gnu",
+      "example",
+      "tutorial"
+    ],
+    "homepage": "https://www.gnu.org/software/hello/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/gnu-hello",
+    "_last_updated": "2026-02-01T17:41:37Z"
+  },
+  "jansson-doc@all": {
+    "name": "jansson-doc",
+    "version": "2.14",
+    "type": "misc",
+    "architecture": "all",
+    "description": "Documentation for Jansson JSON library",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "MIT",
+    "tags": [
+      "json",
+      "documentation",
+      "jansson"
+    ],
+    "homepage": "https://digip.org/jansson/",
+    "dependencies": [
+      "jansson = 2.14"
+    ],
+    "conflicts": [],
+    "provides": [],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/jansson-doc",
+    "_last_updated": "2025-10-26T09:10:00Z"
+  },
+  "jansson@x86_64": {
+    "name": "jansson",
+    "version": "2.14",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "C library for encoding, decoding and manipulating JSON data",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "MIT",
+    "tags": [
+      "json",
+      "library",
+      "c",
+      "parser",
+      "development"
+    ],
+    "homepage": "https://digip.org/jansson/",
+    "dependencies": [
+      "glibc"
+    ],
+    "conflicts": [],
+    "provides": [
+      "libjson",
+      "json-c-alternative"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/jansson",
+    "_last_updated": "2025-10-26T08:57:33Z"
+  },
+  "libxml2@x86_64": {
+    "name": "libxml2",
+    "version": "2.14.6",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "GNOME XML library - C library for parsing and manipulating XML documents",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "MIT",
+    "tags": [
+      "libxml2",
+      "xml",
+      "parser",
+      "gnome",
+      "library",
+      "system"
+    ],
+    "homepage": "https://gitlab.gnome.org/GNOME/libxml2",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "libxml2"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/libxml2",
+    "_last_updated": "2025-10-26T07:26:47Z"
+  },
+  "linux-headers@all": {
+    "name": "linux-headers",
+    "version": "6.17",
+    "type": "misc",
+    "architecture": "all",
+    "description": "Linux kernel headers for userspace development - architecture independent",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "GPL-2.0",
+    "tags": [
+      "linux",
+      "kernel",
+      "headers",
+      "development",
+      "system"
+    ],
+    "homepage": "https://www.kernel.org/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "linux-headers"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/linux-headers",
+    "_last_updated": "2025-10-25T21:13:34Z"
+  },
+  "lz4@x86_64": {
+    "name": "lz4",
+    "version": "1.10.0",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Extremely fast compression algorithm - library and utilities",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "BSD-2-Clause AND GPL-2.0-or-later",
+    "tags": [
+      "compression",
+      "lz4",
+      "library",
+      "fast",
+      "archiver",
+      "utility"
+    ],
+    "homepage": "https://lz4.org/",
+    "dependencies": [
+      "glibc"
+    ],
+    "conflicts": [],
+    "provides": [
+      "liblz4",
+      "lz4-compressor"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/lz4",
+    "_last_updated": "2025-10-26T17:17:55Z"
+  },
+  "musl@x86_64": {
+    "name": "musl",
+    "version": "1.2.5",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "musl libc - lightweight, fast, simple, free C standard library implementation",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "MIT",
+    "tags": [
+      "musl",
+      "libc",
+      "system",
+      "c-library",
+      "lightweight",
+      "static-linking"
+    ],
+    "homepage": "https://musl.libc.org/",
+    "dependencies": [],
+    "conflicts": [
+      "glibc"
+    ],
+    "provides": [
+      "libc"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/musl",
+    "_last_updated": "2025-10-25T20:19:22Z"
+  },
+  "nano@x86_64": {
+    "name": "nano",
+    "version": "8.3",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Small, friendly text editor inspired by Pico - easy to use console text editor",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "GPL-3.0",
+    "tags": [
+      "editor",
+      "text-editor",
+      "console",
+      "nano",
+      "pico",
+      "utility"
+    ],
+    "homepage": "https://www.nano-editor.org/",
+    "dependencies": [
+      "ncurses",
+      "zlib"
+    ],
+    "conflicts": [],
+    "provides": [
+      "text-editor",
+      "pico"
+    ],
+    "replaces": [],
+    "conf": [
+      "/etc/nanorc"
+    ],
+    "_source_repo": "https://github.com/NurOS-Packages/nano",
+    "_last_updated": "2025-10-26T16:35:47Z"
+  },
+  "openssl@x86_64": {
+    "name": "openssl",
+    "version": "3.4.0",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "TLS/SSL and crypto library - robust, full-featured toolkit for TLS and SSL protocols",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "Apache-2.0",
+    "tags": [
+      "ssl",
+      "tls",
+      "crypto",
+      "cryptography",
+      "library",
+      "security",
+      "openssl"
+    ],
+    "homepage": "https://www.openssl.org/",
+    "dependencies": [
+      "glibc",
+      "zlib"
+    ],
+    "conflicts": [],
+    "provides": [
+      "libssl",
+      "libcrypto",
+      "ssl-library"
+    ],
+    "replaces": [],
+    "conf": [
+      "/etc/ssl/openssl.cnf"
+    ],
+    "_source_repo": "https://github.com/NurOS-Packages/openssl",
+    "_last_updated": "2025-10-27T10:01:37Z"
+  },
+  "pcre2@x86_64": {
+    "name": "pcre2",
+    "version": "10.45",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Perl-compatible regular expression library with revised API (PCRE2)",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "BSD-3-Clause",
+    "tags": [
+      "pcre2",
+      "regex",
+      "regexp",
+      "pattern-matching",
+      "perl",
+      "library",
+      "system"
+    ],
+    "homepage": "https://www.pcre.org/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "pcre2"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/pcre2",
+    "_last_updated": "2025-10-26T07:06:37Z"
+  },
+  "readline@x86_64": {
+    "name": "readline",
+    "version": "8.3",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "GNU readline library for command-line editing and history capabilities",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "GPL-3.0",
+    "tags": [
+      "readline",
+      "library",
+      "editing",
+      "history",
+      "commandline",
+      "system"
+    ],
+    "homepage": "https://tiswww.case.edu/php/chet/readline/rltop.html",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "readline"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/readline",
+    "_last_updated": "2025-10-26T06:05:19Z"
+  },
+  "tar@x86_64": {
+    "name": "tar",
+    "version": "1.35",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "GNU Tar, an archiving utility for .tar files.",
+    "maintainer": "NurOS Port Team",
+    "license": "GPL-3.0",
+    "tags": [
+      "archive",
+      "compression",
+      "tar",
+      "gnu"
+    ],
+    "homepage": "https://www.gnu.org/software/tar/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "tar"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/tar",
+    "_last_updated": "2025-10-25T16:48:23Z"
+  },
+  "util-linux@x86_64": {
+    "name": "util-linux",
+    "version": "2.41.2",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Miscellaneous system utilities for Linux including mount, fdisk, dmesg, and more",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "GPL-2.0",
+    "tags": [
+      "system",
+      "utilities",
+      "core",
+      "mount",
+      "fdisk"
+    ],
+    "homepage": "https://www.kernel.org/pub/linux/utils/util-linux/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/util-linux",
+    "_last_updated": "2025-10-25T16:08:01Z"
+  },
+  "vala@x86_64": {
+    "name": "vala",
+    "version": "0.56.18",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Vala compiler - a programming language using modern high level abstractions without imposing additional runtime requirements",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "LGPL-2.1",
+    "tags": [
+      "compiler",
+      "programming-language",
+      "vala",
+      "gnome",
+      "gobject"
+    ],
+    "homepage": "https://vala.dev/",
+    "dependencies": [
+      "glib2"
+    ],
+    "conflicts": [],
+    "provides": [
+      "valac"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/vala",
+    "_last_updated": "2025-10-25T19:23:02Z"
+  },
+  "vim@x86_64": {
+    "name": "vim",
+    "version": "9.1.1871",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "Vi IMproved - enhanced vi editor with syntax highlighting, multi-level undo, and more",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "Vim",
+    "tags": [
+      "editor",
+      "text-editor",
+      "vi",
+      "vim",
+      "development"
+    ],
+    "homepage": "https://www.vim.org/",
+    "dependencies": [
+      "python3",
+      "perl",
+      "ruby",
+      "lua"
+    ],
+    "conflicts": [],
+    "provides": [
+      "vi"
+    ],
+    "replaces": [],
+    "conf": [
+      "/etc/vimrc"
+    ],
+    "_source_repo": "https://github.com/NurOS-Packages/vim",
+    "_last_updated": "2025-10-25T17:20:22Z"
+  },
+  "wget@x86_64": {
+    "name": "wget",
+    "version": "1.25.0",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "GNU Wget - network utility to retrieve files from the Web using HTTP, HTTPS and FTP",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "GPL-3.0",
+    "tags": [
+      "network",
+      "download",
+      "http",
+      "https",
+      "ftp"
+    ],
+    "homepage": "https://www.gnu.org/software/wget/",
+    "dependencies": [
+      "openssl"
+    ],
+    "conflicts": [],
+    "provides": [],
+    "replaces": [],
+    "conf": [
+      "/etc/wgetrc"
+    ],
+    "_source_repo": "https://github.com/NurOS-Packages/wget",
+    "_last_updated": "2025-10-25T16:19:43Z"
+  },
+  "xz@x86_64": {
+    "name": "xz",
+    "version": "5.6.3",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "XZ Utils - LZMA compression utilities and library",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "Public-Domain AND GPL-2.0-or-later",
+    "tags": [
+      "compression",
+      "xz",
+      "lzma",
+      "library",
+      "archiver",
+      "utility"
+    ],
+    "homepage": "https://tukaani.org/xz/",
+    "dependencies": [
+      "glibc"
+    ],
+    "conflicts": [],
+    "provides": [
+      "liblzma",
+      "lzma-utils"
+    ],
+    "replaces": [
+      "lzma"
+    ],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/xz",
+    "_last_updated": "2025-10-26T16:52:52Z"
+  },
+  "zlib@x86_64": {
+    "name": "zlib",
+    "version": "1.3.1",
+    "type": "binary",
+    "architecture": "x86_64",
+    "description": "A massively spiffy yet delicately unobtrusive compression library used by many programs",
+    "maintainer": "AnmiTaliDev <anmitali198@gmail.com>",
+    "license": "Zlib",
+    "tags": [
+      "compression",
+      "library",
+      "zlib",
+      "deflate",
+      "system"
+    ],
+    "homepage": "https://zlib.net/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "zlib"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/zlib",
+    "_last_updated": "2025-10-26T05:51:15Z"
+  },
+  "zstd@aarch64": {
+    "name": "zstd",
+    "version": "1.5.5",
+    "type": "binary",
+    "architecture": "aarch64",
+    "description": "Zstandard - fast real-time compression algorithm and data compression tool with high compression ratios",
+    "maintainer": "XCubicArnament",
+    "license": "BSD-3-Clause",
+    "tags": [
+      "compression",
+      "archiver",
+      "zstd",
+      "utilities"
+    ],
+    "homepage": "https://facebook.github.io/zstd/",
+    "dependencies": [],
+    "conflicts": [],
+    "provides": [
+      "compression-tool"
+    ],
+    "replaces": [],
+    "conf": [],
+    "_source_repo": "https://github.com/NurOS-Packages/zstd-aarch64",
+    "_last_updated": "2025-12-06T11:12:39Z"
   }
 }
