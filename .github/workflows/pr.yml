@@ -57,22 +57,22 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-              docker.io \
-              docker-compose \
               podman \
-              podman-docker \
               slirp4netns \
               apparmor \
               apparmor-utils \
               pigz
-
-      - name: Detect Container Runtime
-        id: runtime
-        run: |
-          if docker info &> /dev/null; then
+          
+          # podman-docker создаёт симлинки docker→podman
+          sudo apt-get install -y podman-docker || true
+          
+          # Detect runtime
+          if command -v docker &> /dev/null; then
             echo "runtime=docker" >> $GITHUB_OUTPUT
-          elif podman info &> /dev/null; then
+            echo "✅ Using Docker (podman-docker symlink)"
+          elif command -v podman &> /dev/null; then
             echo "runtime=podman" >> $GITHUB_OUTPUT
+            echo "✅ Using Podman"
           fi
 
       - name: Setup pnpm
@@ -116,14 +116,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-              docker.io \
-              docker-compose \
               podman \
-              podman-docker \
               slirp4netns \
               apparmor \
               apparmor-utils \
               pigz
+          
+          # podman-docker создаёт симлинки docker→podman
+          sudo apt-get install -y podman-docker || true
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -168,14 +168,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-              docker.io \
-              docker-compose \
               podman \
-              podman-docker \
               slirp4netns \
               apparmor \
               apparmor-utils \
               pigz
+          
+          # podman-docker создаёт симлинки docker→podman
+          sudo apt-get install -y podman-docker || true
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -222,24 +222,26 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-              docker.io \
-              docker-compose \
               podman \
-              podman-docker \
               slirp4netns \
               apparmor \
               apparmor-utils \
               pigz
+          
+          # podman-docker создаёт симлинки docker→podman
+          sudo apt-get install -y podman-docker || true
 
       - name: Detect Container Runtime
         id: runtime
         run: |
-          if docker info &> /dev/null; then
+          if command -v docker &> /dev/null; then
             echo "runtime=docker" >> $GITHUB_OUTPUT
             echo "compose=docker compose" >> $GITHUB_OUTPUT
-          elif podman info &> /dev/null; then
+            echo "✅ Using Docker (podman-docker symlink)"
+          elif command -v podman &> /dev/null; then
             echo "runtime=podman" >> $GITHUB_OUTPUT
             echo "compose=podman-compose" >> $GITHUB_OUTPUT
+            echo "✅ Using Podman"
           fi
 
       - name: Build Docker image
@@ -269,14 +271,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-              docker.io \
-              docker-compose \
               podman \
-              podman-docker \
               slirp4netns \
               apparmor \
               apparmor-utils \
               pigz
+          
+          # podman-docker создаёт симлинки docker→podman
+          sudo apt-get install -y podman-docker || true
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
