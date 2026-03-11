@@ -1,68 +1,23 @@
 # =============================================================================
-# Docker Compose - Production & Development
+# Docker Compose - Main Configuration
 # =============================================================================
-# Main docker-compose file for local development and production deployment.
-# Supports both Docker and Podman.
+# Unified docker-compose file for development, preview, and CI/CD.
+# Uses profiles to separate environments.
 #
 # Usage:
-#   Development:  docker-compose up dev
-#   Production:   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
-#   CI/CD:        docker-compose -f docker-compose.ci.yml up <service>
+#   Development:  docker compose up dev
+#   Preview:      docker compose --profile preview up preview
+#   CI/CD:        docker compose --profile ci run --rm <service>
 # =============================================================================
 
 services:
   # -------------------------------------------------------------------------
-  # Service: Frontend Production (nginx)
-  # Serves the built frontend application
-  # -------------------------------------------------------------------------
-  frontend:
-    build:
-      context: .
-      dockerfile: docker/frontend.Dockerfile
-      target: production
-    ports:
-      - "80:80"
-    volumes:
-      - ./listpkgs.nuros.front-end/public:/usr/share/nginx/html
-    environment:
-      - NODE_ENV=production
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    restart: unless-stopped
-    networks:
-      - nuros-network
-
-  # -------------------------------------------------------------------------
-  # Service: Backend (Python for listpkgs-aggregator)
-  # Provides Python environment for package list generation
-  # -------------------------------------------------------------------------
-  backend:
-    build:
-      context: .
-      dockerfile: docker/backend.Dockerfile
-    volumes:
-      - ./.ci:/app/.ci
-      - ./listpkgs.nuros.front-end/public:/app/output
-    environment:
-      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
-    command: ["tail", "-f", "/dev/null"]
-    restart: unless-stopped
-    networks:
-      - nuros-network
-
-  # -------------------------------------------------------------------------
-  # Service: Development Server
-  # Vite development server with hot reload
+  # Service: Development Server (Vite with hot reload)
+  # Profile: development (default)
   # -------------------------------------------------------------------------
   dev:
-    build:
-      context: .
-      dockerfile: docker/frontend.Dockerfile
-      target: dev
+    image: node:22-alpine
+    container_name: nuros-dev
     working_dir: /app/listpkgs.nuros.front-end
     volumes:
       - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
@@ -73,58 +28,175 @@ services:
       - NODE_ENV=development
       - HOST=0.0.0.0
       - VITE_DEV_SERVER=true
-    command: ["pnpm", "dev", "--host", "0.0.0.0"]
+    command: ["sh", "-c", "apk add --no-cache pnpm && corepack enable pnpm && pnpm install --frozen-lockfile && pnpm dev --host 0.0.0.0"]
     profiles:
       - development
+      - ""
     networks:
       - nuros-network
 
   # -------------------------------------------------------------------------
-  # Service: Test Runner
-  # Runs Playwright tests in headless mode
+  # Service: Preview Production Build (nginx)
+  # Profile: preview
+  # -------------------------------------------------------------------------
+  preview:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      target: preview
+    container_name: nuros-preview
+    ports:
+      - "8080:80"
+    depends_on:
+      build:
+        condition: service_completed_successfully
+    profiles:
+      - preview
+    networks:
+      - nuros-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # -------------------------------------------------------------------------
+  # Service: Build Frontend (Production build)
+  # Profile: preview, ci
+  # -------------------------------------------------------------------------
+  build:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      target: builder
+    container_name: nuros-build
+    volumes:
+      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
+      - build_dist:/app/listpkgs.nuros.front-end/dist
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      generate-repodata:
+        condition: service_completed_successfully
+    profiles:
+      - preview
+      - ci
+    networks:
+      - nuros-network
+
+  # -------------------------------------------------------------------------
+  # Service: Lint Frontend (ESLint + Stylelint)
+  # Profile: ci
+  # -------------------------------------------------------------------------
+  lint:
+    build:
+      context: .
+      dockerfile: docker/lint_frontend.Dockerfile
+    container_name: nuros-lint
+    working_dir: /app/listpkgs.nuros.front-end
+    volumes:
+      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end:ro
+    command: ["sh", "-c", "pnpm lint:ts && pnpm lint:scss"]
+    profiles:
+      - ci
+    networks:
+      - nuros-network
+
+  # -------------------------------------------------------------------------
+  # Service: Test Frontend (Playwright E2E)
+  # Profile: ci
   # -------------------------------------------------------------------------
   test:
     build:
       context: .
-      dockerfile: docker/frontend.Dockerfile
-      target: test
+      dockerfile: docker/tests_frontend.Dockerfile
+    container_name: nuros-test
     working_dir: /app/listpkgs.nuros.front-end
     volumes:
-      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
+      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end:ro
       - ./listpkgs.nuros.front-end/public:/app/listpkgs.nuros.front-end/public
-      - playwright-cache:/ms-playwright
+      - playwright_cache:/ms-playwright
     environment:
       - CI=true
       - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
     command: ["pnpm", "test"]
     profiles:
-      - test
+      - ci
     networks:
       - nuros-network
 
   # -------------------------------------------------------------------------
-  # Service: Lint Runner
-  # Runs ESLint and Stylelint
+  # Service: Update Package List (Python backend)
+  # Profile: ci
   # -------------------------------------------------------------------------
-  lint:
+  update-list:
     build:
       context: .
-      dockerfile: docker/frontend.Dockerfile
-      target: deps
-    working_dir: /app/listpkgs.nuros.front-end
+      dockerfile: docker/backend.Dockerfile
+    container_name: nuros-update-list
     volumes:
-      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
+      - ./listpkgs.nuros.front-end/public:/app/output
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
     command: >
       sh -c "
-        pnpm install --frozen-lockfile &&
-        pnpm lint:ts &&
-        pnpm lint:scss
+        cd /app/.ci &&
+        listpkgs-aggregate &&
+        cp repodata.json /app/output/ &&
+        sha256sum repodata.json > /app/output/repodata.json.sha256
       "
     profiles:
-      - development
-      - test
+      - ci
     networks:
       - nuros-network
+
+  # -------------------------------------------------------------------------
+  # Service: Generate repodata.json (for preview)
+  # Profile: preview
+  # -------------------------------------------------------------------------
+  generate-repodata:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: nuros-generate-repodata
+    volumes:
+      - ./listpkgs.nuros.front-end/public:/app/output
+    command: >
+      sh -c "
+        cd /app/.ci &&
+        listpkgs-aggregate &&
+        cp repodata.json /app/output/ &&
+        sha256sum repodata.json > /app/output/repodata.json.sha256
+      "
+    profiles:
+      - preview
+    networks:
+      - nuros-network
+
+  # -------------------------------------------------------------------------
+  # Service: Preview Init (generate repodata + build + start preview)
+  # Runs on host, not in container - orchestrates the preview workflow
+  # Profile: preview
+  # -------------------------------------------------------------------------
+  preview-init:
+    image: alpine:latest
+    container_name: nuros-preview-init
+    volumes:
+      - .:/workspace:cached
+    working_dir: /workspace
+    command: >
+      sh -c "
+        echo '' &&
+        echo '🔧 Step 1: Generating repodata.json...' &&
+        docker compose --profile preview run --rm generate-repodata &&
+        echo '' &&
+        echo '📦 Step 2: Building and starting preview...' &&
+        docker compose --profile preview up --build preview
+      "
+    profiles:
+      - preview
+    network_mode: host
 
 # =============================================================================
 # Networks
@@ -140,5 +212,7 @@ networks:
 volumes:
   node_modules:
     name: nuros-node-modules
-  playwright-cache:
+  build_dist:
+    name: nuros-build-dist
+  playwright_cache:
     name: nuros-playwright-cache
