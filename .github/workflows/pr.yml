@@ -181,18 +181,21 @@ jobs:
               tests: '${{ needs.playwright-tests.result }}'
             };
             const allPassed = Object.values(result).every(r => r === 'success');
+            const body = [
+              `## ${allPassed ? '✅' : '⚠️'} PR Test Results`,
+              '',
+              '| Check | Status |',
+              '|-------|--------|',
+              `| 🔍 Lint | ${result.lint} |`,
+              `| 🔒 Security | ${result.security} |`,
+              `| 🏗️ Build | ${result.build} |`,
+              `| 🧪 Tests | ${result.tests} |`,
+              '',
+              allPassed ? '**All checks passed!** ✅' : '**Some checks failed.** See logs.'
+            ].join('\n');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `## ${allPassed ? '✅' : '⚠️'} PR Test Results
-
-| Check | Status |
-|-------|--------|
-| 🔍 Lint | ${result.lint} |
-| 🔒 Security | ${result.security} |
-| 🏗️ Build | ${result.build} |
-| 🧪 Tests | ${result.tests} |
-
-${allPassed ? '**All checks passed!** ✅' : '**Some checks failed.** See logs.'}`
+              body: body
             });
