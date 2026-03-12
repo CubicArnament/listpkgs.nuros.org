@@ -108,8 +108,9 @@ jobs:
       - name: Build frontend in container
         run: |
           podman-compose --profile ci build --no-cache build
+          mkdir -p listpkgs.nuros.front-end/dist
           CONTAINER_ID=$(podman create localhost/listpkgsnurosorg_build:latest)
-          podman cp $CONTAINER_ID:/app/listpkgs.nuros.front-end/dist/ listpkgs.nuros.front-end/dist/
+          podman cp $CONTAINER_ID:/app/listpkgs.nuros.front-end/dist/. listpkgs.nuros.front-end/dist/
           podman rm -f $CONTAINER_ID
 
       - name: Upload build artifact
