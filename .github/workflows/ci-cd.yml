@@ -129,11 +129,13 @@ jobs:
               podman \
               podman-docker \
               podman-compose \
-              pigz
+              pigz \
+              slirp4netns
 
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
+          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run update-list service
         env:
@@ -213,11 +215,13 @@ jobs:
               podman \
               podman-docker \
               podman-compose \
-              pigz
+              pigz \
+              slirp4netns
 
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
+          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Build frontend in container
         id: build
@@ -275,11 +279,13 @@ jobs:
               podman \
               podman-docker \
               podman-compose \
-              pigz
+              pigz \
+              slirp4netns
 
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
+          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run tests in container
         run: |
