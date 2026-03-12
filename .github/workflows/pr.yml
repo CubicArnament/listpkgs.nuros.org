@@ -50,18 +50,11 @@ jobs:
               podman-docker \
               python3-pip \
               pigz \
-              apparmor \
-              apparmor-utils \
               slirp4netns
           pip3 install podman-compose --break-system-packages
 
-          # Enable AppArmor
-          sudo systemctl enable apparmor
-          sudo systemctl start apparmor
-
           echo "✅ Podman: $(podman --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
           echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run ESLint + Stylelint in container
@@ -126,18 +119,11 @@ jobs:
               podman-docker \
               python3-pip \
               pigz \
-              apparmor \
-              apparmor-utils \
               slirp4netns
           pip3 install podman-compose --break-system-packages
 
-          # Enable AppArmor
-          sudo systemctl enable apparmor
-          sudo systemctl start apparmor
-
           echo "✅ Podman: $(podman --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
           echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Build frontend in container
@@ -174,18 +160,11 @@ jobs:
               podman-docker \
               python3-pip \
               pigz \
-              apparmor \
-              apparmor-utils \
               slirp4netns
           pip3 install podman-compose --break-system-packages
 
-          # Enable AppArmor
-          sudo systemctl enable apparmor
-          sudo systemctl start apparmor
-
           echo "✅ Podman: $(podman --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
           echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Download repodata (if exists)

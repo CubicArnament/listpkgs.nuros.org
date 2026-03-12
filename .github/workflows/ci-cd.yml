@@ -130,24 +130,11 @@ jobs:
               podman-docker \
               python3-pip \
               pigz \
-              apparmor \
-              apparmor-utils \
               slirp4netns
           pip3 install podman-compose --break-system-packages
 
-          # Enable AppArmor
-          sudo systemctl enable apparmor
-          sudo systemctl start apparmor
-
-          # Install custom AppArmor profile
-          sudo cp docker/container-apparmor-profile-strict /etc/apparmor.d/container-nuros-strict
-          sudo apparmor_parser -r /etc/apparmor.d/container-nuros-strict
-          sudo aa-enforce container-nuros-strict
-
           echo "✅ Podman: $(podman --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
-          echo "✅ AppArmor profile: container-nuros-strict (enforced)"
           echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run update-list service
@@ -229,24 +216,11 @@ jobs:
               podman-docker \
               python3-pip \
               pigz \
-              apparmor \
-              apparmor-utils \
               slirp4netns
           pip3 install podman-compose --break-system-packages
 
-          # Enable AppArmor
-          sudo systemctl enable apparmor
-          sudo systemctl start apparmor
-
-          # Install custom AppArmor profile
-          sudo cp docker/container-apparmor-profile-strict /etc/apparmor.d/container-nuros-strict
-          sudo apparmor_parser -r /etc/apparmor.d/container-nuros-strict
-          sudo aa-enforce container-nuros-strict
-
           echo "✅ Podman: $(podman --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
-          echo "✅ AppArmor profile: container-nuros-strict (enforced)"
           echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Build frontend in container
@@ -306,24 +280,11 @@ jobs:
               podman-docker \
               python3-pip \
               pigz \
-              apparmor \
-              apparmor-utils \
               slirp4netns
           pip3 install podman-compose --break-system-packages
 
-          # Enable AppArmor
-          sudo systemctl enable apparmor
-          sudo systemctl start apparmor
-
-          # Install custom AppArmor profile
-          sudo cp docker/container-apparmor-profile-strict /etc/apparmor.d/container-nuros-strict
-          sudo apparmor_parser -r /etc/apparmor.d/container-nuros-strict
-          sudo aa-enforce container-nuros-strict
-
           echo "✅ Podman: $(podman --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
-          echo "✅ AppArmor profile: container-nuros-strict (enforced)"
           echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run tests in container
