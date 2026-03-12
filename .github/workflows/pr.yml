@@ -27,6 +27,9 @@ concurrency:
   group: pr-tests-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # -------------------------------------------------------------------------
   # Job 1: Lint Code (ESLint + Stylelint)
