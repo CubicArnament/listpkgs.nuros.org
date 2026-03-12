@@ -13,19 +13,13 @@ FROM node:22-alpine
 LABEL maintainer="NurOS Development Team"
 LABEL description="Playwright E2E tests for frontend"
 
-# Install system dependencies
+# Install system dependencies for Playwright
 RUN apk add --no-cache \
-    libc6-compat \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont
+    libc6-compat
 
 # Set environment
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_EXECUTABLE_PATH=/ms-playwright/chromium-*/chrome-linux/chrome
 ENV CI=true
 
 WORKDIR /app/listpkgs.nuros.front-end
@@ -38,6 +32,9 @@ COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.ya
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile --prefer-offline
+
+# Install Playwright browsers
+RUN pnpm exec playwright install chromium --with-deps
 
 # Copy source code (AFTER dependencies so they're in the image layer)
 COPY listpkgs.nuros.front-end/ .
