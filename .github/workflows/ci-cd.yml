@@ -175,6 +175,7 @@ jobs:
       - name: Build frontend in container
         id: build
         run: |
+          podman-compose --profile ci build --no-cache build
           podman-compose --profile ci run --rm build
           echo "success=true" >> $GITHUB_OUTPUT
 
@@ -218,6 +219,7 @@ jobs:
 
       - name: Run tests in container
         run: |
+          podman-compose --profile ci build --no-cache test
           podman-compose --profile ci run --rm test
 
       - name: Upload test results

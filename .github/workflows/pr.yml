@@ -47,6 +47,7 @@ jobs:
 
       - name: Run ESLint + Stylelint in container
         run: |
+          podman-compose --profile ci build --no-cache lint
           podman-compose --profile ci run --rm lint
 
   # -------------------------------------------------------------------------
@@ -106,6 +107,7 @@ jobs:
 
       - name: Build frontend in container
         run: |
+          podman-compose --profile ci build --no-cache build
           podman-compose --profile ci run --rm build
 
       - name: Upload build artifact
@@ -134,6 +136,7 @@ jobs:
 
       - name: Run Playwright tests in container
         run: |
+          podman-compose --profile ci build --no-cache test
           podman-compose --profile ci run --rm test
 
       - name: Upload test results

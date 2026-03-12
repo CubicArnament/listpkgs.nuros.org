@@ -37,6 +37,7 @@ jobs:
 
       - name: Run ESLint + Stylelint in container
         run: |
+          podman-compose --profile ci build --no-cache lint
           podman-compose --profile ci run --rm lint
 
       - name: Create lint summary
