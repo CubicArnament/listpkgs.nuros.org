@@ -81,6 +81,14 @@ services:
       - ci
     networks:
       - nuros-network
+    security_opt:
+      - apparmor=container-nuros-strict
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /root/.npm
+      - /root/.cache
 
   # -------------------------------------------------------------------------
   # Service: Lint Frontend (ESLint + Stylelint)
@@ -98,6 +106,14 @@ services:
       - ci
     networks:
       - nuros-network
+    security_opt:
+      - apparmor=container-nuros-strict
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /root/.npm
+      - /root/.cache
 
   # -------------------------------------------------------------------------
   # Service: Test Frontend (Playwright E2E)
@@ -118,6 +134,13 @@ services:
       - ci
     networks:
       - nuros-network
+    security_opt:
+      - apparmor=container-nuros-strict
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /ms-playwright
 
   # -------------------------------------------------------------------------
   # Service: Update Package List (Python backend)
@@ -143,6 +166,13 @@ services:
       - ci
     networks:
       - nuros-network
+    security_opt:
+      - apparmor=container-nuros-strict
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/tmp
 
   # -------------------------------------------------------------------------
   # Service: Generate repodata.json (for preview)
@@ -166,6 +196,13 @@ services:
       - preview
     networks:
       - nuros-network
+    security_opt:
+      - apparmor=container-nuros-strict
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/tmp
 
   # -------------------------------------------------------------------------
   # Service: Preview Init (generate repodata + build + start preview)
