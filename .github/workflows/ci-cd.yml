@@ -40,10 +40,10 @@ jobs:
   # Job 1: Check Lint Status
   # -------------------------------------------------------------------------
   # Checks if the last lint.yml run for this branch was successful.
-  # Does NOT trigger lint.yml - just reads the last result.
+  # Waits for lint to complete if it's still running.
   check-lint:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
     outputs:
       lint-passed: ${{ steps.check.outputs.passed }}
 
@@ -53,35 +53,51 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Check if any lint runs are in progress
-          IN_PROGRESS=$(gh run list \
-            --repo ${{ github.repository }} \
-            --workflow "Lint Frontend" \
-            --branch ${{ github.ref_name }} \
-            --json status \
-            -q '[.[] | select(.status == "in_progress" or .status == "queued")] | length')
+          MAX_WAIT=1800  # 30 minutes max wait time
+          WAIT_INTERVAL=15  # Check every 15 seconds
+          ELAPSED=0
 
-          if [ "$IN_PROGRESS" -gt 0 ]; then
-            echo "Lint is still running. Aborting ci-cd."
-            echo "passed=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
+          while true; do
+            # Check if any lint runs are in progress or queued
+            IN_PROGRESS=$(gh run list \
+              --repo ${{ github.repository }} \
+              --workflow "Lint Frontend" \
+              --branch ${{ github.ref_name }} \
+              --json status \
+              -q '[.[] | select(.status == "in_progress" or .status == "queued")] | length')
 
-          # Check last completed lint run
-          LINT_RESULT=$(gh run list \
-            --repo ${{ github.repository }} \
-            --workflow "Lint Frontend" \
-            --branch ${{ github.ref_name }} \
-            -s success \
-            --limit 1 \
-            --json conclusion \
-            -q '.[0].conclusion // "unknown"')
+            if [ "$IN_PROGRESS" -gt 0 ]; then
+              echo "Lint is still running. Waiting ${WAIT_INTERVAL}s..."
+              sleep $WAIT_INTERVAL
+              ELAPSED=$((ELAPSED + WAIT_INTERVAL))
+              
+              if [ "$ELAPSED" -ge "$MAX_WAIT" ]; then
+                echo "Timeout waiting for lint to complete."
+                echo "passed=false" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+              continue
+            fi
 
-          if [ "$LINT_RESULT" = "success" ]; then
-            echo "passed=true" >> $GITHUB_OUTPUT
-          else
-            echo "passed=false" >> $GITHUB_OUTPUT
-          fi
+            # No in-progress runs, check last completed run
+            LINT_RESULT=$(gh run list \
+              --repo ${{ github.repository }} \
+              --workflow "Lint Frontend" \
+              --branch ${{ github.ref_name }} \
+              -s success \
+              --limit 1 \
+              --json conclusion \
+              -q '.[0].conclusion // "unknown"')
+
+            if [ "$LINT_RESULT" = "success" ]; then
+              echo "Lint passed successfully!"
+              echo "passed=true" >> $GITHUB_OUTPUT
+            else
+              echo "Lint failed or not found. Result: $LINT_RESULT"
+              echo "passed=false" >> $GITHUB_OUTPUT
+            fi
+            break
+          done
 
       - name: Log lint status
         run: |
