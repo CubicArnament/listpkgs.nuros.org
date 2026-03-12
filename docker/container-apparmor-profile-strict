@@ -164,13 +164,13 @@ profile container-nuros-strict flags=(attach_disconnected,mediate_deleted) {
   # ============================================================================
   # MOUNT - Restricted (no arbitrary mounts)
   # ============================================================================
-  
+
   # Allow only specific mount types needed for container operation
-  mount -t proc proc,
-  mount -t sysfs sysfs,
-  mount -t tmpfs tmpfs,
-  mount -t devpts devpts,
-  
+  mount options=(ro) /proc -> /proc,
+  mount options=(ro) /sys -> /sys,
+  mount fstype=tmpfs tmpfs,
+  mount fstype=devpts devpts,
+
   # Deny all other mounts
   deny mount,
   
