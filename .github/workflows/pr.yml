@@ -137,6 +137,13 @@ jobs:
           sudo apt-get install -y podman podman-docker python3-pip
           pip3 install podman-compose --break-system-packages
 
+      - name: Download repodata (if exists)
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: repodata-json
+          path: listpkgs.nuros.front-end/public/
+
       - name: Run Playwright tests in container
         run: |
           podman-compose --profile ci build --no-cache test
