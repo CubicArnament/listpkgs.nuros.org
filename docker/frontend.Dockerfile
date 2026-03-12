@@ -61,6 +61,9 @@ RUN cd listpkgs.nuros.front-end && \
         echo "✗ No repodata.json.sha256 found in public"; \
     fi || true
 
+# No default command - build is complete
+CMD ["echo", "Build complete. Artifacts in /app/listpkgs.nuros.front-end/dist"]
+
 # -----------------------------------------------------------------------------
 # Stage 3: Development Preview (nginx for local testing)
 # -----------------------------------------------------------------------------

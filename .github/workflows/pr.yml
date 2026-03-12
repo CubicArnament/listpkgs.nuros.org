@@ -108,7 +108,9 @@ jobs:
       - name: Build frontend in container
         run: |
           podman-compose --profile ci build --no-cache build
-          podman-compose --profile ci run --rm build
+          podman-compose --profile ci create build
+          podman-compose --profile ci cp build:/app/listpkgs.nuros.front-end/dist/ listpkgs.nuros.front-end/dist/
+          podman-compose --profile ci rm -f build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
