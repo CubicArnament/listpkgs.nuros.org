@@ -122,11 +122,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Podman and podman-compose
+      - name: Install Podman and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y podman podman-docker python3-pip
+          sudo apt-get install -y \
+              podman \
+              podman-docker \
+              python3-pip \
+              pigz \
+              apparmor \
+              apparmor-utils \
+              slirp4netns
           pip3 install podman-compose --break-system-packages
+
+          # Enable AppArmor
+          sudo systemctl enable apparmor
+          sudo systemctl start apparmor
+
+          echo "✅ Podman: $(podman --version)"
+          echo "✅ pigz: $(pigz --version | head -1)"
+          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
+          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run update-list service
         env:
@@ -199,11 +215,27 @@ jobs:
           name: repodata-json
           path: listpkgs.nuros.front-end/public/
 
-      - name: Install Podman and podman-compose
+      - name: Install Podman and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y podman podman-docker python3-pip
+          sudo apt-get install -y \
+              podman \
+              podman-docker \
+              python3-pip \
+              pigz \
+              apparmor \
+              apparmor-utils \
+              slirp4netns
           pip3 install podman-compose --break-system-packages
+
+          # Enable AppArmor
+          sudo systemctl enable apparmor
+          sudo systemctl start apparmor
+
+          echo "✅ Podman: $(podman --version)"
+          echo "✅ pigz: $(pigz --version | head -1)"
+          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
+          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Build frontend in container
         id: build
@@ -254,11 +286,27 @@ jobs:
           name: repodata-json
           path: listpkgs.nuros.front-end/public/
 
-      - name: Install Podman and podman-compose
+      - name: Install Podman and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y podman podman-docker python3-pip
+          sudo apt-get install -y \
+              podman \
+              podman-docker \
+              python3-pip \
+              pigz \
+              apparmor \
+              apparmor-utils \
+              slirp4netns
           pip3 install podman-compose --break-system-packages
+
+          # Enable AppArmor
+          sudo systemctl enable apparmor
+          sudo systemctl start apparmor
+
+          echo "✅ Podman: $(podman --version)"
+          echo "✅ pigz: $(pigz --version | head -1)"
+          echo "✅ AppArmor: $(aa-status --version 2>/dev/null || echo 'installed')"
+          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run tests in container
         run: |
