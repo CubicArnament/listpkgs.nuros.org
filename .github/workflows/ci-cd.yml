@@ -176,9 +176,9 @@ jobs:
         id: build
         run: |
           podman-compose --profile ci build --no-cache build
-          podman-compose --profile ci create build
-          podman-compose --profile ci cp build:/app/listpkgs.nuros.front-end/dist/ listpkgs.nuros.front-end/dist/
-          podman-compose --profile ci rm -f build
+          CONTAINER_ID=$(podman create localhost/listpkgsnurosorg_build:latest)
+          podman cp $CONTAINER_ID:/app/listpkgs.nuros.front-end/dist/ listpkgs.nuros.front-end/dist/
+          podman rm -f $CONTAINER_ID
           echo "success=true" >> $GITHUB_OUTPUT
 
       - name: Verify build artifacts
