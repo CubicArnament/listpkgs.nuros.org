@@ -83,11 +83,6 @@ services:
       - nuros-network
     security_opt:
       - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /root/.npm
-      - /root/.cache
 
   # -------------------------------------------------------------------------
   # Service: Lint Frontend (ESLint + Stylelint)
@@ -107,11 +102,6 @@ services:
       - nuros-network
     security_opt:
       - no-new-privileges:true
-    read_only: false
-    tmpfs:
-      - /tmp
-      - /root/.npm
-      - /root/.cache
 
   # -------------------------------------------------------------------------
   # Service: Test Frontend (Playwright E2E)
@@ -134,10 +124,6 @@ services:
       - nuros-network
     security_opt:
       - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /ms-playwright
 
   # -------------------------------------------------------------------------
   # Service: Update Package List (Python backend)
@@ -165,10 +151,6 @@ services:
       - nuros-network
     security_opt:
       - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /var/tmp
 
   # -------------------------------------------------------------------------
   # Service: Generate repodata.json (for preview)
@@ -194,10 +176,6 @@ services:
       - nuros-network
     security_opt:
       - no-new-privileges:true
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /var/tmp
 
   # -------------------------------------------------------------------------
   # Service: Preview Init (generate repodata + build + start preview)
