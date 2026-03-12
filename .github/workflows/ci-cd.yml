@@ -52,6 +52,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Check if any lint runs are in progress
+          IN_PROGRESS=$(gh run list \
+            --repo ${{ github.repository }} \
+            --workflow "Lint Frontend" \
+            --branch ${{ github.ref_name }} \
+            --json status \
+            -q '[.[] | select(.status == "in_progress" or .status == "queued")] | length')
+
+          if [ "$IN_PROGRESS" -gt 0 ]; then
+            echo "Lint is still running. Aborting ci-cd."
+            echo "passed=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Check last completed lint run
           LINT_RESULT=$(gh run list \
             --repo ${{ github.repository }} \
             --workflow "Lint Frontend" \
