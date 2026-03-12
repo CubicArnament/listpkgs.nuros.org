@@ -38,7 +38,7 @@ jobs:
   # -------------------------------------------------------------------------
   # Job 1: Check Lint Status
   # -------------------------------------------------------------------------
-  # Checks if the last lint.yml run was successful.
+  # Checks if the last lint.yml run for this branch was successful.
   # Does NOT trigger lint.yml - just reads the last result.
   check-lint:
     runs-on: ubuntu-latest
@@ -55,6 +55,7 @@ jobs:
           LINT_RESULT=$(gh run list \
             --repo ${{ github.repository }} \
             --workflow "Lint Frontend" \
+            --branch ${{ github.ref_name }} \
             -s success \
             --limit 1 \
             --json conclusion \
@@ -68,7 +69,7 @@ jobs:
 
       - name: Log lint status
         run: |
-          echo "Last lint.yml result: ${{ steps.check.outputs.passed }}"
+          echo "Last lint.yml result for branch ${{ github.ref_name }}: ${{ steps.check.outputs.passed }}"
 
   # -------------------------------------------------------------------------
   # Job 2: Update Package List
