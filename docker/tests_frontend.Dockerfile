@@ -8,18 +8,14 @@
 #   docker build -f docker/tests_frontend.Dockerfile -t nuros-frontend-tests .
 # =============================================================================
 
-FROM node:22-alpine
+# Use Debian-based image for Playwright compatibility
+FROM node:22-bookworm
 
 LABEL maintainer="NurOS Development Team"
 LABEL description="Playwright E2E tests for frontend"
 
-# Install system dependencies for Playwright
-RUN apk add --no-cache \
-    libc6-compat
-
 # Set environment
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-ENV PUPPETEER_EXECUTABLE_PATH=/ms-playwright/chromium-*/chrome-linux/chrome
 ENV CI=true
 
 WORKDIR /app/listpkgs.nuros.front-end
@@ -33,7 +29,7 @@ COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.ya
 # Install dependencies
 RUN pnpm install --frozen-lockfile --prefer-offline
 
-# Install Playwright browsers
+# Install Playwright browsers with system dependencies
 RUN pnpm exec playwright install chromium --with-deps
 
 # Copy source code (AFTER dependencies so they're in the image layer)
