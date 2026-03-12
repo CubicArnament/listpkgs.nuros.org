@@ -48,14 +48,12 @@ jobs:
           sudo apt-get install -y \
               podman \
               podman-docker \
-              python3-pip \
-              pigz \
-              slirp4netns
-          pip3 install podman-compose --break-system-packages
+              podman-compose \
+              pigz
 
           echo "✅ Podman: $(podman --version)"
+          echo "✅ podman-compose: $(podman-compose --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Run ESLint + Stylelint in container
         run: |
@@ -117,14 +115,12 @@ jobs:
           sudo apt-get install -y \
               podman \
               podman-docker \
-              python3-pip \
-              pigz \
-              slirp4netns
-          pip3 install podman-compose --break-system-packages
+              podman-compose \
+              pigz
 
           echo "✅ Podman: $(podman --version)"
+          echo "✅ podman-compose: $(podman-compose --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Build frontend in container
         run: |
@@ -158,14 +154,12 @@ jobs:
           sudo apt-get install -y \
               podman \
               podman-docker \
-              python3-pip \
-              pigz \
-              slirp4netns
-          pip3 install podman-compose --break-system-packages
+              podman-compose \
+              pigz
 
           echo "✅ Podman: $(podman --version)"
+          echo "✅ podman-compose: $(podman-compose --version)"
           echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
 
       - name: Download repodata (if exists)
         continue-on-error: true
