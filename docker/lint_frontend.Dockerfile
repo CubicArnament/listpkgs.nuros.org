@@ -33,5 +33,5 @@ COPY listpkgs.nuros.front-end/ .
 # Set CI environment variable
 ENV CI=true
 
-# Default command - run both linters
+# Default command - run both linters with --fix
 CMD ["sh", "-c", "pnpm lint"]

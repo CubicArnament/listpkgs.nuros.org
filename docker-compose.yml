@@ -109,7 +109,7 @@ services:
     security_opt:
       - apparmor=container-nuros-strict
       - no-new-privileges:true
-    read_only: true
+    read_only: false
     tmpfs:
       - /tmp
       - /root/.npm
