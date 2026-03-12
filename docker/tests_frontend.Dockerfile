@@ -39,7 +39,7 @@ COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.ya
 # Install dependencies
 RUN pnpm install --frozen-lockfile --prefer-offline
 
-# Copy source code
+# Copy source code (AFTER dependencies so they're in the image layer)
 COPY listpkgs.nuros.front-end/ .
 
 # Copy public assets (repodata.json if exists)

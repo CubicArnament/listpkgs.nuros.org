@@ -72,11 +72,10 @@ services:
       target: builder
     container_name: nuros-build
     volumes:
-      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
-      - build_node_modules:/app/listpkgs.nuros.front-end/node_modules
       - build_dist:/app/listpkgs.nuros.front-end/dist
     environment:
       - NODE_ENV=production
+      - CI=true
     profiles:
       - preview
       - ci
@@ -92,9 +91,6 @@ services:
       context: .
       dockerfile: docker/lint_frontend.Dockerfile
     container_name: nuros-lint
-    volumes:
-      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
-      - lint_node_modules:/app/listpkgs.nuros.front-end/node_modules
     environment:
       - CI=true
     command: ["sh", "-c", "pnpm lint"]
@@ -113,9 +109,6 @@ services:
       dockerfile: docker/tests_frontend.Dockerfile
     container_name: nuros-test
     volumes:
-      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end:ro
-      - ./listpkgs.nuros.front-end/public:/app/listpkgs.nuros.front-end/public
-      - test_node_modules:/app/listpkgs.nuros.front-end/node_modules
       - playwright_cache:/ms-playwright
     environment:
       - CI=true
@@ -210,15 +203,7 @@ networks:
 # Volumes
 # =============================================================================
 volumes:
-  node_modules:
-    name: nuros-node-modules
   build_dist:
     name: nuros-build-dist
-  build_node_modules:
-    name: nuros-build-node-modules
   playwright_cache:
     name: nuros-playwright-cache
-  lint_node_modules:
-    name: nuros-lint-node-modules
-  test_node_modules:
-    name: nuros-test-node-modules

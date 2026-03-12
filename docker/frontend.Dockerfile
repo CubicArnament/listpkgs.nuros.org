@@ -33,14 +33,14 @@ FROM deps AS builder
 
 WORKDIR /app
 
-# Copy source code
+# Copy source code FIRST
 COPY listpkgs.nuros.front-end/ ./listpkgs.nuros.front-end/
 
 # Set production environment
 ENV NODE_ENV=production
 ENV CI=true
 
-# Install dependencies
+# Install dependencies AFTER copy (so they're in the image layer, not volume)
 RUN cd listpkgs.nuros.front-end && pnpm install --frozen-lockfile
 
 # Build the frontend
