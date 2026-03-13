@@ -188,16 +188,17 @@ services:
     container_name: nuros-format
     volumes:
       - .:/workspace
-    working_dir: /workspace
+    working_dir: /workspace/listpkgs.nuros.front-end
     environment:
       - CI=true
     command: >
       sh -c "
         echo '🔧 Formatting Python code...' &&
+        cd /workspace &&
         black --config .ci/pyproject.toml .ci/ &&
         isort .ci/ &&
         echo '🎨 Formatting frontend code...' &&
-        cd listpkgs.nuros.front-end && pnpm format &&
+        pnpm exec prettier --write 'src/**/*.{ts,tsx,css,scss}' &&
         echo '✅ Formatting complete!'
       "
     profiles:

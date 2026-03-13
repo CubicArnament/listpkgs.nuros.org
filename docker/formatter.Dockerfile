@@ -44,14 +44,15 @@ RUN cd /workspace/listpkgs.nuros.front-end && pnpm install --frozen-lockfile --p
 COPY .ci/ /workspace/.ci/
 COPY listpkgs.nuros.front-end/ /workspace/listpkgs.nuros.front-end/
 
-WORKDIR /workspace
+WORKDIR /workspace/listpkgs.nuros.front-end
 
 # Format command
 CMD ["sh", "-c", "\
     echo '🔧 Formatting Python code...' && \
+    cd /workspace && \
     black --config .ci/pyproject.toml .ci/ && \
     isort .ci/ && \
     echo '🎨 Formatting frontend code...' && \
-    cd listpkgs.nuros.front-end && pnpm format && \
+    pnpm exec prettier --write 'src/**/*.{ts,tsx,css,scss}' && \
     echo '✅ Formatting complete!' \
 "]
