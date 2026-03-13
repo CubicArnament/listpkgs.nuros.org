@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Podman and dependencies
         run: |
@@ -48,9 +48,12 @@ jobs:
           sudo apt-get install -y \
               podman \
               podman-docker \
-              podman-compose \
               pigz \
-              slirp4netns
+              slirp4netns \
+              python3-pip
+
+          # Обновляем podman-compose до версии с поддержкой профилей
+          pip install --break-system-packages 'podman-compose>=1.1.0'
 
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
@@ -74,15 +77,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v4.4.0
         with:
           version: 9
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: 'pnpm'
@@ -96,7 +99,7 @@ jobs:
         continue-on-error: true
 
       - name: Dependency Review
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: moderate
 
@@ -109,7 +112,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Podman and dependencies
         run: |
@@ -117,9 +120,12 @@ jobs:
           sudo apt-get install -y \
               podman \
               podman-docker \
-              podman-compose \
               pigz \
-              slirp4netns
+              slirp4netns \
+              python3-pip
+
+          # Обновляем podman-compose до версии с поддержкой профилей
+          pip install --break-system-packages 'podman-compose>=1.1.0'
 
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
@@ -135,7 +141,7 @@ jobs:
           podman rm -f $CONTAINER_ID
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pr-build
           path: listpkgs.nuros.front-end/dist/
@@ -150,7 +156,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Podman and dependencies
         run: |
@@ -158,9 +164,12 @@ jobs:
           sudo apt-get install -y \
               podman \
               podman-docker \
-              podman-compose \
               pigz \
-              slirp4netns
+              slirp4netns \
+              python3-pip
+
+          # Обновляем podman-compose до версии с поддержкой профилей
+          pip install --break-system-packages 'podman-compose>=1.1.0'
 
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
@@ -169,7 +178,7 @@ jobs:
 
       - name: Download repodata (if exists)
         continue-on-error: true
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: repodata-json
           path: listpkgs.nuros.front-end/public/
@@ -181,7 +190,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: playwright-report
           path: listpkgs.nuros.front-end/playwright-report/
@@ -213,7 +222,7 @@ jobs:
           EOF
 
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         if: always()
         with:
           script: |
