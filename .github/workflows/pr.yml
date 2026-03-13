@@ -3,12 +3,15 @@
 # =============================================================================
 # Comprehensive tests for every Pull Request:
 # 1. Security checks (npm audit, dependency review)
-# 2. Build verification  
+# 2. Build verification
 # 3. Playwright tests
 #
 # Runs ONLY on pull requests (not on push).
 # For lint-only checks, see lint.yml.
 # All checks run in Podman containers.
+#
+# Note: Code formatting is handled by autofmt.yml workflow.
+#       Format checks run in parallel with this workflow.
 # =============================================================================
 
 name: PR Tests

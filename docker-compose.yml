@@ -178,6 +178,37 @@ services:
       - no-new-privileges:true
 
   # -------------------------------------------------------------------------
+  # Service: Format Code (Python + Frontend)
+  # Profile: ci, development
+  # -------------------------------------------------------------------------
+  format:
+    build:
+      context: .
+      dockerfile: docker/formatter.Dockerfile
+    container_name: nuros-format
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    environment:
+      - CI=true
+    command: >
+      sh -c "
+        echo '🔧 Formatting Python code...' &&
+        black --config .ci/pyproject.toml .ci/ &&
+        isort .ci/ &&
+        echo '🎨 Formatting frontend code...' &&
+        cd listpkgs.nuros.front-end && pnpm format &&
+        echo '✅ Formatting complete!'
+      "
+    profiles:
+      - ci
+      - development
+    networks:
+      - nuros-network
+    security_opt:
+      - no-new-privileges:true
+
+  # -------------------------------------------------------------------------
   # Service: Preview Init (generate repodata + build + start preview)
   # Runs on host, not in container - orchestrates the preview workflow
   # Profile: preview
