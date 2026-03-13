@@ -255,6 +255,10 @@ jobs:
   # -------------------------------------------------------------------------
   # Job 4: Deploy to GitHub Pages
   # -------------------------------------------------------------------------
+  # Deploys the built frontend to GitHub Pages.
+  # Runs after successful lint, update-list, and build jobs.
+  # Does NOT run tests anymore (removed for faster deployment).
+  # -------------------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
