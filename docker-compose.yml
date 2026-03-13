@@ -248,3 +248,5 @@ volumes:
     name: nuros-build-dist
   playwright_cache:
     name: nuros-playwright-cache
+  node_modules:
+    name: nuros-node-modules
