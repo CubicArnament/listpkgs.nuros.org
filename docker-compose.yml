@@ -199,7 +199,6 @@ services:
         isort .ci/ &&
         echo '🎨 Formatting frontend code...' &&
         cd /workspace/listpkgs.nuros.front-end &&
-        ls -la node_modules/.bin/ | grep prettier &&
         node_modules/.bin/prettier --write 'src/**/*.{ts,tsx,css,scss}' &&
         echo '✅ Formatting complete!'
       "

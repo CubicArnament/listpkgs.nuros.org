@@ -37,11 +37,8 @@ WORKDIR /workspace
 # Copy frontend package files
 COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.yaml /workspace/listpkgs.nuros.front-end/
 
-# Install frontend dependencies (creates node_modules inside listpkgs.nuros.front-end)
-RUN cd /workspace/listpkgs.nuros.front-end && pnpm install --frozen-lockfile --prefer-offline
-
-# Verify prettier is installed
-RUN ls -la /workspace/listpkgs.nuros.front-end/node_modules/.bin/ | grep prettier || echo "prettier not found"
+# Install frontend dependencies with shamefully-hoist to create node_modules
+RUN cd /workspace/listpkgs.nuros.front-end && pnpm install --frozen-lockfile --prefer-offline --shamefully-hoist
 
 # Copy source code
 COPY .ci/ /workspace/.ci/
