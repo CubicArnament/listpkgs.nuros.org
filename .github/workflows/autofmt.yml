@@ -21,6 +21,8 @@ on:
   push:
     branches-ignore:
       - 'gh-pages'
+    paths-ignore:
+      - '**.md'
   pull_request:
     branches: [ main ]
     types: [opened, synchronize, reopened, ready_for_review]
@@ -46,7 +48,18 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      - name: Check if commit is from bot
+        id: bot-check
+        run: |
+          if [ "${{ github.event.head_commit.author.username }}" = "github-actions" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "⏭️ Skipping format - commit from github-actions[bot]"
+            exit 0
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
       - name: Checkout repository
+        if: steps.bot-check.outputs.skip != 'true'
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
@@ -55,6 +68,7 @@ jobs:
           ref: ${{ github.head_ref || github.ref }}
 
       - name: Determine run context
+        if: steps.bot-check.outputs.skip != 'true'
         id: context
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
@@ -69,6 +83,7 @@ jobs:
           fi
 
       - name: Install Podman and dependencies
+        if: steps.bot-check.outputs.skip != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -85,12 +100,14 @@ jobs:
           echo "✅ podman-compose: $(podman-compose --version)"
 
       - name: Run formatter via podman-compose
+        if: steps.bot-check.outputs.skip != 'true'
         id: format
         run: |
           # Run formatter service using podman-compose
           podman-compose --profile development run --rm format
 
       - name: Check for changes
+        if: steps.bot-check.outputs.skip != 'true'
         id: changes
         run: |
           if git diff --quiet; then
@@ -102,13 +119,13 @@ jobs:
           fi
 
       - name: Configure Git
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.bot-check.outputs.skip != 'true' && steps.changes.outputs.changed == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Commit changes
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.bot-check.outputs.skip != 'true' && steps.changes.outputs.changed == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -134,29 +151,36 @@ jobs:
       - name: Create format summary
         if: always()
         run: |
+          SKIPPED="${{ steps.bot-check.outputs.skip }}"
           CHANGED="${{ steps.changes.outputs.changed }}"
           CONTEXT="${{ steps.context.outputs.context }}"
-          
-          if [ "$CHANGED" = "true" ]; then
+
+          if [ "$SKIPPED" = "true" ]; then
+            STATUS="⏭️ Skipped (bot commit)"
+            ACTION="Format workflow skipped - commit from github-actions[bot]"
+            CONTEXT_TEXT="N/A"
+          elif [ "$CHANGED" = "true" ]; then
             STATUS="📝 Changes committed"
             ACTION="Code has been formatted and committed"
           else
             STATUS="✅ No changes (success)"
             ACTION="Code is already properly formatted"
           fi
-          
-          case "$CONTEXT" in
-            pr)
-              CONTEXT_TEXT="🔀 Pull Request #${{ github.event.pull_request.number }}"
-              ;;
-            push)
-              CONTEXT_TEXT="📤 Push to \`${{ github.ref_name }}\`"
-              ;;
-            *)
-              CONTEXT_TEXT="🔧 Manual dispatch"
-              ;;
-          esac
-          
+
+          if [ "$SKIPPED" != "true" ]; then
+            case "$CONTEXT" in
+              pr)
+                CONTEXT_TEXT="🔀 Pull Request #${{ github.event.pull_request.number }}"
+                ;;
+              push)
+                CONTEXT_TEXT="📤 Push to \`${{ github.ref_name }}\`"
+                ;;
+              *)
+                CONTEXT_TEXT="🔧 Manual dispatch"
+                ;;
+            esac
+          fi
+
           cat >> "$GITHUB_STEP_SUMMARY" << EOF
           ## 🎨 Auto Format Results
 

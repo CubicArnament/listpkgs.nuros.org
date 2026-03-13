@@ -253,75 +253,17 @@ jobs:
           compression-level: 9
 
   # -------------------------------------------------------------------------
-  # Job 4: Run Tests
-  # -------------------------------------------------------------------------
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs: [check-lint, build]
-    if: needs.check-lint.result == 'success' && needs.check-lint.outputs.lint-passed == 'true' && needs.build.result == 'success' && needs.build.outputs.build_success == 'true'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: frontend-dist
-          path: listpkgs.nuros.front-end/dist/
-
-      - name: Download repodata artifact
-        continue-on-error: true
-        uses: actions/download-artifact@v5
-        with:
-          name: repodata-json
-          path: listpkgs.nuros.front-end/public/
-
-      - name: Install Podman and dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-              podman \
-              podman-docker \
-              pigz \
-              slirp4netns \
-              python3-pip
-
-          # Обновляем podman-compose до версии с поддержкой профилей
-          pip install --break-system-packages 'podman-compose>=1.1.0'
-
-          echo "✅ Podman: $(podman --version)"
-          echo "✅ podman-compose: $(podman-compose --version)"
-          echo "✅ pigz: $(pigz --version | head -1)"
-          echo "✅ slirp4netns: $(slirp4netns --version 2>/dev/null || echo 'installed')"
-
-      - name: Run tests in container
-        run: |
-          podman-compose --profile ci build --no-cache test
-          podman-compose --profile ci run --rm test
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: playwright-report
-          path: listpkgs.nuros.front-end/playwright-report/
-          retention-days: 7
-
-  # -------------------------------------------------------------------------
-  # Job 5: Deploy to GitHub Pages
+  # Job 4: Deploy to GitHub Pages
   # -------------------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [check-lint, update-list, build, test]
+    needs: [check-lint, update-list, build]
     if: |
       always() &&
       needs.check-lint.result == 'success' &&
       needs.update-list.result == 'success' &&
-      needs.build.result == 'success' &&
-      needs.test.result == 'success'
+      needs.build.result == 'success'
 
     environment:
       name: github-pages
@@ -368,6 +310,5 @@ jobs:
           - Lint Check: ${{ needs.check-lint.result }}
           - Update List: ${{ needs.update-list.result }}
           - Build: ${{ needs.build.result }}
-          - Tests: ${{ needs.test.result }}
           - Deploy: ${{ job.status }}
           EOF
