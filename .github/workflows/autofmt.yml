@@ -2,13 +2,12 @@
 # Auto Format Workflow
 # =============================================================================
 # Automatically formats Python and frontend code.
-# Runs on push, PR, schedule, and manual dispatch.
+# Runs on push and PR.
 # Commits changes back to the repository/PR branch.
 #
 # Triggered by:
 # - Push to any branch
 # - Pull request (formats code in PR branch)
-# - Scheduled cron (every 6 hours)
 # - Manual dispatch
 #
 # Formats:
@@ -25,9 +24,6 @@ on:
   pull_request:
     branches: [ main ]
     types: [opened, synchronize, reopened, ready_for_review]
-  schedule:
-    # Every 6 hours: 00:00, 06:00, 12:00, 18:00 UTC
-    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -63,13 +59,10 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "context=pr" >> "$GITHUB_OUTPUT"
-            echo "📝 Running in PR context: ${{ github.event.pull_request.number }}"
+            echo "📝 Running in PR context: #${{ github.event.pull_request.number }}"
           elif [ "${{ github.event_name }}" = "push" ]; then
             echo "context=push" >> "$GITHUB_OUTPUT"
             echo "📝 Running in push context: ${{ github.ref_name }}"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "context=schedule" >> "$GITHUB_OUTPUT"
-            echo "⏰ Running in schedule context"
           else
             echo "context=manual" >> "$GITHUB_OUTPUT"
             echo "🔧 Running in manual dispatch context"
@@ -164,9 +157,6 @@ jobs:
               ;;
             push)
               CONTEXT_TEXT="📤 Push to \`${{ github.ref_name }}\`"
-              ;;
-            schedule)
-              CONTEXT_TEXT="⏰ Scheduled run"
               ;;
             *)
               CONTEXT_TEXT="🔧 Manual dispatch"
