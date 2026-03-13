@@ -26,8 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-# Install Python formatters
-RUN uv pip install black isort
+# Install Python formatters (system-wide)
+RUN uv pip install --system black isort
 
 # Install pnpm
 RUN npm install -g pnpm
