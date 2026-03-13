@@ -84,17 +84,11 @@ jobs:
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
 
-      - name: Build formatter container
-        run: |
-          podman build -f docker/formatter.Dockerfile -t nuros-formatter .
-
-      - name: Run formatter
+      - name: Run formatter via podman-compose
         id: format
         run: |
-          # Run formatter in container
-          podman run --rm \
-              -v $(pwd):/workspace \
-              nuros-formatter
+          # Run formatter service using podman-compose
+          podman-compose --profile development run --rm format
 
       - name: Check for changes
         id: changes
