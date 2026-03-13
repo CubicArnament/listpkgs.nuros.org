@@ -9,49 +9,12 @@
 #   docker run --rm -v $(pwd):/workspace nuros-formatter
 # =============================================================================
 
-FROM python:3.12-slim AS python-formatter
-
-LABEL maintainer="NurOS Development Team"
-LABEL description="Code formatter for Python and Frontend"
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install uv (Python package manager)
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install Python formatters
-RUN uv pip install black isort
-
-# =============================================================================
-
-FROM node:22-alpine AS frontend-formatter
-
-LABEL maintainer="NurOS Development Team"
-LABEL description="Prettier formatter for frontend code"
-
-# Install pnpm
-RUN corepack enable pnpm && pnpm --version
-
-WORKDIR /app/listpkgs.nuros.front-end
-
-# Copy package files
-COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.yaml ./
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile --prefer-offline
-
-# =============================================================================
-
 FROM python:3.12-slim AS final
 
 LABEL maintainer="NurOS Development Team"
 LABEL description="Unified code formatter"
 
-# Install git and curl
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     curl \
@@ -59,14 +22,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv
+# Install uv (Python package manager) and add to PATH
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
 
 # Install Python formatters
 RUN uv pip install black isort
 
 # Install pnpm
-RUN curl -fsSL https://get.pnpm.io/v6.js | node - add --global pnpm
+RUN npm install -g pnpm
 
 WORKDIR /workspace
 
