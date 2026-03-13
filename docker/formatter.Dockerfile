@@ -53,6 +53,6 @@ CMD ["sh", "-c", "\
     isort .ci/ && \
     echo '🎨 Formatting frontend code...' && \
     cd /workspace/listpkgs.nuros.front-end && \
-    node_modules/.bin/prettier --write 'src/**/*.{ts,tsx,css,scss}' && \
+    pnpx prettier --write 'src/**/*.{ts,tsx,css,scss}' && \
     echo '✅ Formatting complete!' \
 "]
