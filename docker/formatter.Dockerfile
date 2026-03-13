@@ -53,6 +53,7 @@ CMD ["sh", "-c", "\
     black --config .ci/pyproject.toml .ci/ && \
     isort .ci/ && \
     echo '🎨 Formatting frontend code...' && \
-    pnpm exec prettier --write 'src/**/*.{ts,tsx,css,scss}' && \
+    cd /workspace/listpkgs.nuros.front-end && \
+    ./node_modules/.bin/prettier --write 'src/**/*.{ts,tsx,css,scss}' && \
     echo '✅ Formatting complete!' \
 "]
