@@ -96,22 +96,22 @@
     padding: v.$spacing-xs;
     gap: v.$spacing-xs;
   }
-  
+
   // Скрыть кнопки display mode (List/Grid с иконками) - не нужны на мобильных
   .view-mode-group:last-child {
     display: none;
   }
-  
+
   .view-mode-divider {
     display: none;
   }
-  
+
   // Оставить только Group/List view кнопки
   .view-mode-group:first-child {
     width: 100%;
     justify-content: center;
   }
-  
+
   .view-mode-btn {
     padding: v.$spacing-xs v.$spacing-sm;
     font-size: v.$fs-sm;
