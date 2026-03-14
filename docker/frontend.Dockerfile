@@ -24,7 +24,8 @@ RUN corepack enable pnpm && pnpm --version
 COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile --prefer-offline
+# Using --prefer-offline without --frozen-lockfile to allow dependency updates
+RUN pnpm install --prefer-offline
 
 # -----------------------------------------------------------------------------
 # Stage 2: Build
@@ -41,7 +42,8 @@ ENV NODE_ENV=production
 ENV CI=true
 
 # Install dependencies AFTER copy (so they're in the image layer, not volume)
-RUN cd listpkgs.nuros.front-end && pnpm install --frozen-lockfile
+# Using --prefer-offline without --frozen-lockfile to allow dependency updates
+RUN cd listpkgs.nuros.front-end && pnpm install --prefer-offline
 
 # Build the frontend
 RUN cd listpkgs.nuros.front-end && pnpm build

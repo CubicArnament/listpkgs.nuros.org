@@ -25,7 +25,8 @@ WORKDIR /app/listpkgs.nuros.front-end
 COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.yaml ./
 
 # Install dependencies (BEFORE source code so they're in the image layer)
-RUN pnpm install --frozen-lockfile --prefer-offline
+# Using --prefer-offline without --frozen-lockfile to allow dependency updates
+RUN pnpm install --prefer-offline
 
 # Copy source code (AFTER dependencies)
 COPY listpkgs.nuros.front-end/ .
