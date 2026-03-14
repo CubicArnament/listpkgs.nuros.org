@@ -253,21 +253,93 @@ jobs:
           compression-level: 9
 
   # -------------------------------------------------------------------------
+  # Job 3.5: WASM Build & Lint
+  # -------------------------------------------------------------------------
+  # Builds and lints WASM Hardware Detector module.
+  # Runs in parallel with frontend build.
+  # -------------------------------------------------------------------------
+  wasm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    outputs:
+      wasm_built: ${{ steps.build.outputs.success }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Podman and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              podman \
+              podman-docker \
+              pigz \
+              slirp4netns \
+              python3-pip
+
+          pip install --break-system-packages 'podman-compose>=1.1.0'
+
+          echo "✅ Podman: $(podman --version)"
+          echo "✅ podman-compose: $(podman-compose --version)"
+
+      - name: Build WASM lint container
+        run: |
+          podman-compose --profile ci build wasm-lint
+
+      - name: Run WASM linter
+        run: |
+          podman-compose --profile ci run --rm wasm-lint
+
+      - name: Build WASM format container
+        run: |
+          podman-compose --profile ci build wasm-format
+
+      - name: Run WASM formatter
+        run: |
+          podman-compose --profile ci run --rm wasm-format
+
+      - name: Check for formatting changes
+        id: format-check
+        run: |
+          if git diff --quiet; then
+            echo "formatted=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "formatted=false" >> "$GITHUB_OUTPUT"
+            git diff
+          fi
+
+      - name: Build WASM module
+        id: build
+        run: |
+          podman-compose --profile ci build wasm-build
+          podman-compose --profile ci run --rm wasm-build
+          echo "success=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload WASM artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: wasm-module
+          path: listpkgs.nuros.front-end/src-go/build/wasm/
+          retention-days: 7
+
+  # -------------------------------------------------------------------------
   # Job 4: Deploy to GitHub Pages
   # -------------------------------------------------------------------------
   # Deploys the built frontend to GitHub Pages.
-  # Runs after successful lint, update-list, and build jobs.
-  # Does NOT run tests anymore (removed for faster deployment).
+  # Runs after successful lint, update-list, build, and wasm jobs.
   # -------------------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [check-lint, update-list, build]
+    needs: [check-lint, update-list, build, wasm]
     if: |
       always() &&
       needs.check-lint.result == 'success' &&
       needs.update-list.result == 'success' &&
-      needs.build.result == 'success'
+      needs.build.result == 'success' &&
+      needs.wasm.result == 'success'
 
     environment:
       name: github-pages
