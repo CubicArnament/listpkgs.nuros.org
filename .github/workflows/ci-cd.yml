@@ -256,18 +256,17 @@ jobs:
   # Job 4: Deploy to GitHub Pages
   # -------------------------------------------------------------------------
   # Deploys the built frontend to GitHub Pages.
-  # Runs after successful lint, update-list, build, and wasm jobs.
+  # Runs after successful lint, update-list, and build jobs.
   # -------------------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [check-lint, update-list, build, wasm]
+    needs: [check-lint, update-list, build]
     if: |
       always() &&
       needs.check-lint.result == 'success' &&
       needs.update-list.result == 'success' &&
-      needs.build.result == 'success' &&
-      needs.wasm.result == 'success'
+      needs.build.result == 'success'
 
     environment:
       name: github-pages
