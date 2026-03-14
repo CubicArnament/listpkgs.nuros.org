@@ -37,13 +37,9 @@ test('should display search bar', async ({ page }) => {
     .locator('input[class*="search"]')
     .or(page.locator('input[placeholder*="Search"]'))
     .or(page.locator('.search-input'));
-  const searchBtn = page
-    .locator('button[class*="search"]')
-    .or(page.locator('button').filter({ hasText: 'Search' }))
-    .or(page.locator('.search-button'));
 
+  // Note: Search works via onChange, no search button exists
   await expect(searchInput).toBeVisible({ timeout: 10000 });
-  await expect(searchBtn).toBeVisible({ timeout: 10000 });
 });
 
 test('should display packages list', async ({ page }) => {
@@ -65,20 +61,20 @@ test('should toggle between list and grouped view', async ({ page }) => {
   // Close sidebar on mobile if needed
   await closeSidebarIfNeeded(page);
 
-  // Find and click grouped view button - try multiple selectors
+  // Find and click grouped view button - text is "Group view" (not "Grouped View")
   const groupedViewBtn = page
     .locator('button')
-    .filter({ hasText: 'Grouped View' })
-    .or(page.locator('button[class*="view"]').filter({ hasText: 'Grouped' }));
+    .filter({ hasText: 'Group view' })
+    .or(page.locator('button[class*="view"]').filter({ hasText: 'Group' }));
 
   await expect(groupedViewBtn).toBeVisible({ timeout: 10000 });
   await groupedViewBtn.first().click({ force: true });
   await page.waitForTimeout(300);
 
-  // Find and click list view button
+  // Find and click list view button - text is "List view" (not "List View")
   const listViewBtn = page
     .locator('button')
-    .filter({ hasText: 'List View' })
+    .filter({ hasText: 'List view' })
     .or(page.locator('button[class*="view"]').filter({ hasText: 'List' }));
 
   await expect(listViewBtn).toBeVisible({ timeout: 10000 });
@@ -97,14 +93,10 @@ test('should search packages', async ({ page }) => {
     .locator('input[class*="search"]')
     .or(page.locator('input[placeholder*="Search"]'))
     .or(page.locator('.search-input'));
-  const searchBtn = page
-    .locator('button[class*="search"]')
-    .or(page.locator('button').filter({ hasText: 'Search' }))
-    .or(page.locator('.search-button'));
 
+  // Search works via onChange (debounced), no button click needed
   await searchInput.fill('git', { timeout: 10000 });
-  await searchBtn.click({ force: true });
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(500); // Wait for debounce (300ms) + rendering
 
   // Verify package cards are still visible
   const packageCards = page.locator('[class*="package"]').or(page.locator('.package-card'));
