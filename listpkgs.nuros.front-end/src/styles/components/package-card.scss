@@ -7,6 +7,7 @@
 
 .package-list {
   display: grid;
+
   // Адаптивная сетка с учетом мобильных устройств
   grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
   gap: v.$spacing-lg;
@@ -57,6 +58,7 @@
   font-weight: 700;
   font-size: v.$fs-lg;
   margin: 0;
+
   // Перенос длинных названий
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -79,6 +81,7 @@
   line-height: 1.6;
   flex-grow: 1;
   margin: 0;
+
   // Перенос длинных слов
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -152,7 +155,7 @@
 // MOBILE RESPONSIVENESS
 // ============================================================================
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .package-list {
     grid-template-columns: 1fr; // Одна колонка на мобильных
     padding: v.$spacing-sm;

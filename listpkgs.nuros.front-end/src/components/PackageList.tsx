@@ -1,4 +1,4 @@
-import { createSignal, createEffect, createMemo } from 'solid-js';
+import { createMemo } from 'solid-js';
 import PackageCard from './PackageCard';
 import GroupedPackageList from './GroupedPackageList';
 import { type Package } from './PackageCard';

@@ -137,7 +137,6 @@
   transition: var(--transition-smooth);
   z-index: v.$z-fixed;
   box-shadow: var(--shadow-lg);
-  -webkit-tap-highlight-color: transparent;
 
   // Оптимизация для touch-устройств
   touch-action: manipulation;

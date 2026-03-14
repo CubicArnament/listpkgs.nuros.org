@@ -11,16 +11,7 @@ import PackageList from '~/components/PackageList';
 import Sidebar from '~/components/Sidebar';
 import usePackageData from '~/hooks/usePackageData';
 
-// Type-safe debounce function с оптимизацией для мобильных
-function debounce<F extends (...args: Parameters<F>) => ReturnType<F>>(fn: F, delay: number) {
-  let timeoutId: number;
-  return (...args: Parameters<F>) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
-  };
-}
-
-// Оптимизированная версия для мобильных устройств
+// Оптимизированная версия debounce для мобильных устройств
 function mobileDebounce<F extends (...args: Parameters<F>) => ReturnType<F>>(fn: F, delay: number) {
   let timeoutId: number;
   return (...args: Parameters<F>) => {

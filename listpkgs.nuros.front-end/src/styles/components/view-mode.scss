@@ -91,7 +91,7 @@
 // MOBILE OPTIMIZATIONS
 // ============================================================================
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .view-mode-container {
     padding: v.$spacing-xs;
     gap: v.$spacing-xs;
