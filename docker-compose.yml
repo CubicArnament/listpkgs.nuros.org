@@ -212,41 +212,45 @@ services:
 
   # -------------------------------------------------------------------------
   # Service: Preview Init (generate repodata + build + start preview)
-  # Helper service that shows instructions for running preview locally
+  # Runs compose commands on host (not in container)
   # Profile: preview
   # -------------------------------------------------------------------------
-  # Note: This service shows how to run preview locally.
-  # For automated preview, use the individual services:
-  #   1. docker compose --profile preview run --rm generate-repodata
-  #   2. docker compose --profile preview up --build preview
+  # Note: This service is a helper that calls compose recursively.
+  # The actual work is done by generate-repodata and preview services.
   # -------------------------------------------------------------------------
   preview-init:
     image: alpine:latest
     container_name: nuros-preview-init
+    volumes:
+      - .:/workspace:cached
+    working_dir: /workspace
+    # This service requires the host's compose command to be available
+    # Use: docker compose --profile preview run --rm preview-init
+    # OR:  podman-compose --profile preview run --rm preview-init
+    # The COMPOSE_PROJECT_NAME environment variable is automatically set by compose
     command: >
       sh -c "
-        echo '========================================'
-        echo '  NurOS Preview - Manual Steps'
-        echo '========================================'
-        echo ''
-        echo 'Run these commands on your host:'
-        echo ''
-        echo '  # Step 1: Generate repodata.json'
-        echo '  docker compose --profile preview run --rm generate-repodata'
-        echo ''
-        echo '  # Step 2: Build and start preview'
-        echo '  docker compose --profile preview up --build preview'
-        echo ''
-        echo 'Or use podman:'
-        echo ''
-        echo '  podman-compose --profile preview run --rm generate-repodata'
-        echo '  podman-compose --profile preview up --build preview'
-        echo ''
-        echo '========================================'
+        echo '========================================' &&
+        echo '  NurOS Preview - Initialization' &&
+        echo '========================================' &&
+        echo '' &&
+        echo '🔧 Step 1: Generating repodata.json...' &&
+        echo '   Running: generate-repodata service' &&
+        echo '' &&
+        COMPOSE_CMD='\$\${COMPOSE_CMD:-docker compose}' &&
+        \$\$COMPOSE_CMD --profile preview run --rm generate-repodata &&
+        echo '' &&
+        echo '📦 Step 2: Building and starting preview...' &&
+        echo '   Running: preview service' &&
+        echo '' &&
+        \$\$COMPOSE_CMD --profile preview up --build preview
       "
     profiles:
       - preview
     network_mode: host
+    environment:
+      # Pass the compose command from host environment
+      - COMPOSE_CMD
 
 # =============================================================================
 # Networks
