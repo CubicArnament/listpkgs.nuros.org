@@ -99,6 +99,11 @@ jobs:
           echo "✅ Podman: $(podman --version)"
           echo "✅ podman-compose: $(podman-compose --version)"
 
+      - name: Build formatter container
+        if: steps.bot-check.outputs.skip != 'true'
+        run: |
+          podman-compose --profile development build format
+
       - name: Run formatter via podman-compose
         if: steps.bot-check.outputs.skip != 'true'
         id: format

@@ -37,8 +37,9 @@ WORKDIR /workspace
 # Copy frontend package files
 COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.yaml /workspace/listpkgs.nuros.front-end/
 
-# Install frontend dependencies with shamefully-hoist to create node_modules
-RUN cd /workspace/listpkgs.nuros.front-end && pnpm install --frozen-lockfile --prefer-offline --shamefully-hoist
+# Install frontend dependencies
+# Using --prefer-offline for faster builds, no --frozen-lockfile to allow updates
+RUN cd /workspace/listpkgs.nuros.front-end && pnpm install --prefer-offline --shamefully-hoist
 
 # Copy source code
 COPY .ci/ /workspace/.ci/
