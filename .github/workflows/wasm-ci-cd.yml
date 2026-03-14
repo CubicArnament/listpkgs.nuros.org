@@ -1,0 +1,245 @@
+# =============================================================================
+# WASM CI/CD Pipeline
+# =============================================================================
+# Builds, lints, and tests WASM Hardware Detector module.
+# Runs on push to main and pull requests.
+#
+# Triggered by:
+# - Push to main branch
+# - Pull requests
+# - Manual dispatch
+# =============================================================================
+
+name: WASM CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'listpkgs.nuros.front-end/src-go/**'
+      - 'docker/wasm_*.Dockerfile'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'listpkgs.nuros.front-end/src-go/**'
+      - 'docker/wasm_*.Dockerfile'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wasm-ci-cd-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  # -------------------------------------------------------------------------
+  # Job 1: Lint WASM Code
+  # -------------------------------------------------------------------------
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Podman and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              podman \
+              podman-docker \
+              pigz \
+              slirp4netns \
+              python3-pip
+
+          pip install --break-system-packages 'podman-compose>=1.1.0'
+
+          echo "✅ Podman: $(podman --version)"
+          echo "✅ podman-compose: $(podman-compose --version)"
+
+      - name: Build WASM lint container
+        run: |
+          podman-compose --profile ci build wasm-lint
+
+      - name: Run WASM linter
+        run: |
+          podman-compose --profile ci run --rm wasm-lint
+
+      - name: Upload lint results
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: wasm-lint-results
+          path: listpkgs.nuros.front-end/src-go/build/lint-report.txt
+          retention-days: 7
+
+  # -------------------------------------------------------------------------
+  # Job 2: Format Check
+  # -------------------------------------------------------------------------
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Podman and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              podman \
+              podman-docker \
+              pigz \
+              slirp4netns \
+              python3-pip
+
+          pip install --break-system-packages 'podman-compose>=1.1.0'
+
+          echo "✅ Podman: $(podman --version)"
+          echo "✅ podman-compose: $(podman-compose --version)"
+
+      - name: Build WASM format container
+        run: |
+          podman-compose --profile ci build wasm-format
+
+      - name: Run WASM formatter
+        run: |
+          podman-compose --profile ci run --rm wasm-format
+
+      - name: Check for formatting changes
+        id: format-check
+        run: |
+          if git diff --quiet; then
+            echo "formatted=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Code is properly formatted"
+          else
+            echo "formatted=false" >> "$GITHUB_OUTPUT"
+            echo "❌ Code needs formatting"
+            git diff
+          fi
+
+      - name: Upload format diff
+        if: steps.format-check.outputs.formatted == 'false'
+        uses: actions/upload-artifact@v5
+        with:
+          name: wasm-format-diff
+          path: listpkgs.nuros.front-end/src-go/
+          retention-days: 1
+
+  # -------------------------------------------------------------------------
+  # Job 3: Build WASM Module
+  # -------------------------------------------------------------------------
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [lint, format]
+    if: always() && needs.lint.result == 'success' && needs.format.result == 'success'
+
+    outputs:
+      build_success: ${{ steps.build.outputs.success }}
+      wasm_size: ${{ steps.size.outputs.size }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Podman and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              podman \
+              podman-docker \
+              pigz \
+              slirp4netns \
+              python3-pip
+
+          pip install --break-system-packages 'podman-compose>=1.1.0'
+
+          echo "✅ Podman: $(podman --version)"
+          echo "✅ podman-compose: $(podman-compose --version)"
+
+      - name: Build WASM build container
+        run: |
+          podman-compose --profile ci build wasm-build
+
+      - name: Build WASM module
+        id: build
+        run: |
+          podman-compose --profile ci run --rm wasm-build
+          echo "success=true" >> "$GITHUB_OUTPUT"
+
+      - name: Check WASM file size
+        id: size
+        run: |
+          if [ -f "listpkgs.nuros.front-end/src-go/build/wasm/hw-detector.wasm" ]; then
+            SIZE=$(du -h listpkgs.nuros.front-end/src-go/build/wasm/hw-detector.wasm | cut -f1)
+            echo "size=$SIZE" >> "$GITHUB_OUTPUT"
+            echo "📦 WASM size: $SIZE"
+          else
+            echo "size=0" >> "$GITHUB_OUTPUT"
+            echo "❌ WASM file not found"
+            exit 1
+          fi
+
+      - name: Upload WASM artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: wasm-module
+          path: |
+            listpkgs.nuros.front-end/src-go/build/wasm/hw-detector.wasm
+            listpkgs.nuros.front-end/src-go/build/wasm/hw-detector.wasm.map
+          retention-days: 7
+
+  # -------------------------------------------------------------------------
+  # Job 4: Summary
+  # -------------------------------------------------------------------------
+  summary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [lint, format, build]
+    if: always()
+
+    steps:
+      - name: Download WASM artifact
+        if: needs.build.result == 'success'
+        uses: actions/download-artifact@v5
+        with:
+          name: wasm-module
+
+      - name: Create WASM CI/CD summary
+        if: always()
+        run: |
+          LINT_RESULT="${{ needs.lint.result }}"
+          FORMAT_RESULT="${{ needs.format.result }}"
+          BUILD_RESULT="${{ needs.build.result }}"
+          WASM_SIZE="${{ needs.build.outputs.wasm_size }}"
+
+          if [ "$LINT_RESULT" = "success" ] && [ "$FORMAT_RESULT" = "success" ] && [ "$BUILD_RESULT" = "success" ]; then
+            STATUS="✅ All checks passed"
+          else
+            STATUS="❌ Some checks failed"
+          fi
+
+          cat >> "$GITHUB_STEP_SUMMARY" << EOF
+          ## 🔧 WASM CI/CD Results
+
+          | Check | Status |
+          |-------|--------|
+          | Lint | $LINT_RESULT |
+          | Format | $FORMAT_RESULT |
+          | Build | $BUILD_RESULT |
+
+          ### Build Info
+          - **WASM Size**: $WASM_SIZE
+          - **Status**: $STATUS
+
+          ### Artifacts
+          - \`hw-detector.wasm\` - WASM модуль
+          - \`hw-detector.wasm.map\` - Source map
+          EOF
