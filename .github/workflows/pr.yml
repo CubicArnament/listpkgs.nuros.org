@@ -186,9 +186,12 @@ jobs:
           name: repodata-json
           path: listpkgs.nuros.front-end/public/
 
-      - name: Run Playwright tests in container
+      - name: Build Playwright test container
         run: |
           podman-compose --profile ci build --no-cache test
+
+      - name: Run Playwright tests in container
+        run: |
           podman-compose --profile ci run --rm test
 
       - name: Upload test results
