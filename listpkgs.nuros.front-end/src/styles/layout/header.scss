@@ -40,10 +40,15 @@
   padding: v.$spacing-sm 0;
   margin-bottom: v.$spacing-sm;
   flex-wrap: wrap;
+  width: 100%;
+  max-width: 600px; // Ограничиваем ширину для лучшего центрирования
+  margin-left: auto;
+  margin-right: auto;
 
   @media (width <= 768px) {
     gap: v.$spacing-sm;
     padding: 0;
+    max-width: 100%;
   }
 }
 
@@ -80,6 +85,7 @@
 
 .logo-link {
   display: inline-block;
+  margin: 0 auto v.$spacing-sm; // Центрирование и отступ снизу
   transition: var(--transition-smooth);
 
   &:hover {
@@ -100,6 +106,7 @@
   object-fit: contain;
   border-radius: 50%;
   display: block;
+  margin: 0 auto; // Явное центрирование изображения
 
   @media (width <= 768px) {
     width: 64px;
@@ -113,11 +120,12 @@
 }
 
 .app-header h1 {
-  margin: 0;
+  margin: 0 auto v.$spacing-sm; // Центрирование с явным auto
   color: var(--color-text-primary);
   font-weight: 700;
   font-size: 1.75rem;
   letter-spacing: -0.5px;
+  text-align: center; // Явно указываем центрирование текста
 
   @media (width <= 768px) {
     font-size: 1.25rem;
@@ -131,7 +139,8 @@
 .project-tagline {
   font-size: 0.9rem;
   color: var(--color-text-secondary);
-  margin: 0;
+  margin: 0 auto v.$spacing-sm; // Центрирование
+  text-align: center;
 
   @media (width <= 768px) {
     font-size: 0.8rem;
@@ -148,6 +157,8 @@
   transition: var(--transition-smooth);
   font-size: 0.95rem;
   -webkit-tap-highlight-color: transparent;
+  text-align: center;
+  margin: 0 auto; // Центрирование
 
   strong {
     color: var(--color-accent);
