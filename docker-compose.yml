@@ -210,30 +210,6 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # -------------------------------------------------------------------------
-  # Service: Preview Init (generate repodata + build + start preview)
-  # Runs on host, not in container - orchestrates the preview workflow
-  # Profile: preview
-  # -------------------------------------------------------------------------
-  preview-init:
-    image: alpine:latest
-    container_name: nuros-preview-init
-    volumes:
-      - .:/workspace:cached
-    working_dir: /workspace
-    command: >
-      sh -c "
-        echo '' &&
-        echo '🔧 Step 1: Generating repodata.json...' &&
-        docker compose --profile preview run --rm generate-repodata &&
-        echo '' &&
-        echo '📦 Step 2: Building and starting preview...' &&
-        docker compose --profile preview up --build preview
-      "
-    profiles:
-      - preview
-    network_mode: host
-
 # =============================================================================
 # Networks
 # =============================================================================
