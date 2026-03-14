@@ -212,8 +212,11 @@ services:
 
   # -------------------------------------------------------------------------
   # Service: Preview Init (generate repodata + build + start preview)
-  # Runs on host, not in container - orchestrates the preview workflow
+  # Runs compose commands on host (not in container)
   # Profile: preview
+  # -------------------------------------------------------------------------
+  # Note: This service is a helper that calls compose recursively.
+  # The actual work is done by generate-repodata and preview services.
   # -------------------------------------------------------------------------
   preview-init:
     image: alpine:latest
@@ -221,30 +224,33 @@ services:
     volumes:
       - .:/workspace:cached
     working_dir: /workspace
+    # This service requires the host's compose command to be available
+    # Use: docker compose --profile preview run --rm preview-init
+    # OR:  podman-compose --profile preview run --rm preview-init
+    # The COMPOSE_PROJECT_NAME environment variable is automatically set by compose
     command: >
       sh -c "
-        # Determine which compose command to use
-        if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
-          COMPOSE_CMD='docker compose'
-        elif command -v podman-compose >/dev/null 2>&1; then
-          COMPOSE_CMD='podman-compose'
-        elif command -v docker-compose >/dev/null 2>&1; then
-          COMPOSE_CMD='docker-compose'
-        else
-          echo 'Error: No compose command found'
-          exit 1
-        fi
-        echo \"Using compose command: $COMPOSE_CMD\"
+        echo '========================================' &&
+        echo '  NurOS Preview - Initialization' &&
+        echo '========================================' &&
         echo '' &&
         echo '🔧 Step 1: Generating repodata.json...' &&
-        $COMPOSE_CMD --profile preview run --rm generate-repodata &&
+        echo '   Running: generate-repodata service' &&
+        echo '' &&
+        COMPOSE_CMD='\$\${COMPOSE_CMD:-docker compose}' &&
+        \$\$COMPOSE_CMD --profile preview run --rm generate-repodata &&
         echo '' &&
         echo '📦 Step 2: Building and starting preview...' &&
-        $COMPOSE_CMD --profile preview up --build preview
+        echo '   Running: preview service' &&
+        echo '' &&
+        \$\$COMPOSE_CMD --profile preview up --build preview
       "
     profiles:
       - preview
     network_mode: host
+    environment:
+      # Pass the compose command from host environment
+      - COMPOSE_CMD
 
 # =============================================================================
 # Networks
