@@ -7,7 +7,8 @@
 
 .package-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  // Адаптивная сетка с учетом мобильных устройств
+  grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
   gap: v.$spacing-lg;
   padding: v.$spacing-md;
   width: 100%;
@@ -25,6 +26,11 @@
   gap: v.$spacing-md;
   border: 1px solid var(--color-border);
   transition: var(--transition-smooth);
+  
+  // Исправление переполнения
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   &:hover {
     transform: translateY(-4px);
@@ -47,6 +53,9 @@
   font-weight: 700;
   font-size: v.$fs-lg;
   margin: 0;
+  // Перенос длинных названий
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .package-version {
@@ -66,6 +75,10 @@
   line-height: 1.6;
   flex-grow: 1;
   margin: 0;
+  // Перенос длинных слов
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .package-meta {
@@ -94,6 +107,8 @@
   .meta-value {
     color: var(--color-text-primary);
     font-weight: 500;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 }
 
@@ -127,4 +142,33 @@
   border-radius: v.$radius-lg;
   color: var(--color-text-secondary);
   font-size: v.$fs-lg;
+}
+
+// ============================================================================
+// MOBILE RESPONSIVENESS
+// ============================================================================
+
+@media (max-width: 480px) {
+  .package-list {
+    grid-template-columns: 1fr; // Одна колонка на мобильных
+    padding: v.$spacing-sm;
+    gap: v.$spacing-md;
+  }
+  
+  .package-header {
+    flex-direction: column; // Кнопка под заголовком
+    align-items: flex-start;
+  }
+  
+  .toggle-details-btn {
+    width: 100%; // Кнопка на всю ширину
+  }
+  
+  .package-meta {
+    grid-template-columns: 1fr; // Мета в одну колонку
+  }
+  
+  .package-name {
+    font-size: v.$fs-md; // Меньше шрифт названия
+  }
 }
