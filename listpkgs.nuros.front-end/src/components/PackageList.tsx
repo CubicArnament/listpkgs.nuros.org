@@ -1,4 +1,4 @@
-import { createSignal, createEffect } from 'solid-js';
+import { createSignal, createEffect, createMemo } from 'solid-js';
 import PackageCard from './PackageCard';
 import GroupedPackageList from './GroupedPackageList';
 import { type Package } from './PackageCard';
@@ -21,12 +21,10 @@ interface PackageListProps {
 }
 
 const PackageList = (props: PackageListProps) => {
-  const [filteredPackages, setFilteredPackages] = createSignal<Package[]>([]);
-
-  createEffect(() => {
+  // Мемоизация фильтрации для оптимизации производительности
+  const filteredPackages = createMemo(() => {
     const result = applyFilters(props.packages, props.searchTerm, props.filters);
-    const sorted = sortPackagesByName(result);
-    setFilteredPackages(sorted);
+    return sortPackagesByName(result);
   });
 
   const getListClass = () => {

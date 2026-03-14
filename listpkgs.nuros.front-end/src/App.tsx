@@ -11,12 +11,23 @@ import PackageList from '~/components/PackageList';
 import Sidebar from '~/components/Sidebar';
 import usePackageData from '~/hooks/usePackageData';
 
-// Type-safe debounce function
+// Type-safe debounce function с оптимизацией для мобильных
 function debounce<F extends (...args: Parameters<F>) => ReturnType<F>>(fn: F, delay: number) {
   let timeoutId: number;
   return (...args: Parameters<F>) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn(...args), delay);
+  };
+}
+
+// Оптимизированная версия для мобильных устройств
+function mobileDebounce<F extends (...args: Parameters<F>) => ReturnType<F>>(fn: F, delay: number) {
+  let timeoutId: number;
+  return (...args: Parameters<F>) => {
+    clearTimeout(timeoutId);
+    // Уменьшенная задержка для мобильных для более отзывчивого поиска
+    const mobileDelay = /Mobi|Android/i.test(navigator.userAgent) ? Math.min(delay, 150) : delay;
+    timeoutId = setTimeout(() => fn(...args), mobileDelay);
   };
 }
 
@@ -55,7 +66,7 @@ function App() {
   // Initialize theme on mount
   applyTheme(darkTheme());
 
-  const debouncedSetSearchTerm = debounce((query: string) => {
+  const debouncedSetSearchTerm = mobileDebounce((query: string) => {
     setSearchTerm(query);
   }, 300);
 
