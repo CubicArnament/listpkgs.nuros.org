@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+#nodejs
 .pnpm-store/
 node_modules
 dist
@@ -23,5 +23,3 @@ playwright-report
 *.njsproj
 *.sln
 *.sw?
-# Временно
-src-go
