@@ -225,10 +225,10 @@ services:
       sh -c "
         echo '' &&
         echo '🔧 Step 1: Generating repodata.json...' &&
-        docker compose --profile preview run --rm generate-repodata &&
+        podman-compose --profile preview run --rm generate-repodata &&
         echo '' &&
         echo '📦 Step 2: Building and starting preview...' &&
-        docker compose --profile preview up --build preview
+        podman-compose --profile preview up --build preview
       "
     profiles:
       - preview
