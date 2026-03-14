@@ -62,23 +62,19 @@ test('should toggle between list and grouped view', async ({ page }) => {
   await closeSidebarIfNeeded(page);
 
   // Find and click grouped view button - text is "Group view" (not "Grouped View")
-  const groupedViewBtn = page
-    .locator('button')
-    .filter({ hasText: 'Group view' })
-    .or(page.locator('button[class*="view"]').filter({ hasText: 'Group' }));
+  // Use exact text match to avoid matching "☰ List" button
+  const groupedViewBtn = page.getByRole('button', { name: 'Group view' });
 
   await expect(groupedViewBtn).toBeVisible({ timeout: 10000 });
-  await groupedViewBtn.first().click({ force: true });
+  await groupedViewBtn.click({ force: true });
   await page.waitForTimeout(300);
 
   // Find and click list view button - text is "List view" (not "List View")
-  const listViewBtn = page
-    .locator('button')
-    .filter({ hasText: 'List view' })
-    .or(page.locator('button[class*="view"]').filter({ hasText: 'List' }));
+  // Use exact text match to avoid matching "☰ List" button
+  const listViewBtn = page.getByRole('button', { name: 'List view' });
 
   await expect(listViewBtn).toBeVisible({ timeout: 10000 });
-  await listViewBtn.first().click({ force: true });
+  await listViewBtn.click({ force: true });
   await page.waitForTimeout(300);
 });
 
