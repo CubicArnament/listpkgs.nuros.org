@@ -21,8 +21,8 @@ ENV NODE_ENV=test
 
 WORKDIR /app/listpkgs.nuros.front-end
 
-# Install pnpm (pnpm is not included in the base image)
-RUN npm install -g pnpm
+# Enable corepack for pnpm (Node.js 22 includes corepack by default)
+RUN corepack enable pnpm
 
 # Copy package files
 COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.yaml ./
@@ -30,7 +30,8 @@ COPY listpkgs.nuros.front-end/package.json listpkgs.nuros.front-end/pnpm-lock.ya
 # Install dependencies
 RUN pnpm install --frozen-lockfile --prefer-offline
 
-# Install Playwright browsers (Chromium only for CI)
+# Install Playwright browsers (Chromium for Desktop + Mobile Chrome tests)
+# Pixel 5 emulation uses Chromium engine, so only chromium is needed
 RUN pnpm exec playwright install chromium
 
 # Copy source code

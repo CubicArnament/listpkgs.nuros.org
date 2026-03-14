@@ -38,6 +38,12 @@ export default defineConfig({
           name: 'chromium',
           use: { ...devices['Desktop Chrome'] },
         },
+
+        /* Test against mobile Chrome */
+        {
+          name: 'Mobile Chrome',
+          use: { ...devices['Pixel 5'] },
+        },
       ]
     : [
         {
@@ -58,7 +64,7 @@ export default defineConfig({
         /* Test against mobile viewports. */
         {
           name: 'Mobile Chrome',
-          use: { ...devices['Galaxy S5'] },
+          use: { ...devices['Pixel 5'] },
         },
         {
           name: 'Mobile Safari',
