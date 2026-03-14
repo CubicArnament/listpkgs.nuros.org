@@ -1,238 +1,110 @@
 # NurOS Package Search System
 
-> **Speed • Security • Accessibility** - Поиск пакетов для экосистемы NurOS
+This repository contains the package search and cataloging system for the NurOS ecosystem.
 
-[![CI/CD Pipeline](https://github.com/CubicArnament/listpkgs.nuros.org/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/CubicArnament/listpkgs.nuros.org/actions/workflows/ci-cd.yml)
-[![Auto Format](https://github.com/CubicArnament/listpkgs.nuros.org/actions/workflows/autofmt.yml/badge.svg)](https://github.com/CubicArnament/listpkgs.nuros.org/actions/workflows/autofmt.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+## Project Structure
 
-## 📖 О проекте
+- `.github/workflows/` - GitHub Actions automation files
+  - `update-list.yml` - updates package list every 6 hours
+  - `build_frontend.yml` - builds frontend after package list update
+  - `deploy_on_pages.yml` - deploys built frontend to GitHub Pages
+  - `sync-gitbook.yml` - syncs documentation to GitBook
+- `listpkgs.nuros.front-end/` - frontend application source code
+- `blog/` - GitBook documentation source files
+- `packages.json` - metadata file for all NurOS packages (auto-generated)
+- `CNAME` - custom domain file for GitHub Pages (frontend)
 
-NurOS Package Search - это система поиска и каталогизации пакетов для экосистемы NurOS. Предоставляет удобный веб-интерфейс для поиска пакетов, фильтрации по различным критериям и просмотра детальной информации.
+## How It Works
 
-## ✨ Возможности
+1. Every 6 hours, `update-list.yml` runs to:
+   - Scan all repositories in NurOS-Packages organization
+   - Collect metadata from `metadata.json` files
+   - Generate a single `packages.json` file
 
-- 🔍 **Поиск пакетов** - по названию, описанию и ключевым словам
-- 🏷️ **Фильтрация** - по архитектуре, типу пакета, мейнтейнеру, лицензии, источнику
-- 📊 **Группировка** - просмотр пакетов по алфавиту или списком
-- 📦 **Детальная информация** - версия, архитектура, зависимости, конфликты
-- 🔧 **WASM Hardware Detector** - определение характеристик железа через WebAssembly
-- 🌙 **Тёмная/светлая тема** - переключение между темами
-- 📱 **Адаптивный дизайн** - поддержка мобильных устройств
+2. After successful list update, `build_frontend.yml` runs to:
+   - Install frontend dependencies
+   - Build frontend using Vite
+   - Include up-to-date data from `packages.json`
+   - Upload result as artifact
 
-## 🏗️ Структура проекта
+3. After successful build, `deploy_on_pages.yml` runs to:
+   - Download built frontend artifact
+   - Deploy to GitHub Pages via GitHub Actions
 
-```
-listpkgs.nuros.org/
-├── .github/workflows/          # GitHub Actions workflow
-│   ├── ci-cd.yml              # Полный CI/CD пайплайн
-│   ├── autofmt.yml            # Автоформатирование кода
-│   ├── lint.yml               # Линтинг кода
-│   └── pr.yml                 # Тесты для Pull Request
-├── listpkgs.nuros.front-end/  # Фронтенд приложение
-│   ├── src/                   # TypeScript/React исходники
-│   ├── src-go/                # Go/WASM модули
-│   │   ├── hw-detector/       # WASM модуль определения железа
-│   │   ├── main.go            # Точка входа WASM
-│   │   └── meson.build        # Сборка WASM
-│   ├── tests/                 # Playwright E2E тесты
-│   └── package.json           # Зависимости npm
-├── .ci/                       # Python бэкенд для агрегации пакетов
-├── docker/                    # Dockerfile для всех сервисов
-│   ├── frontend.Dockerfile    # Сборка фронтенда
-│   ├── lint_frontend.Dockerfile # Линтинг
-│   ├── tests_frontend.Dockerfile # E2E тесты
-│   ├── formatter.Dockerfile   # Форматирование кода
-│   ├── backend.Dockerfile     # Python агрегатор
-│   ├── wasm_build.Dockerfile  # WASM сборка
-│   ├── wasm_lint.Dockerfile   # WASM линтинг
-│   └── wasm_format.Dockerfile # WASM форматирование
-├── docker-compose.yml         # Конфигурация Docker Compose
-└── README.md                  # Этот файл
-```
+> **Note:** The `gh-pages` branch is no longer used. Deployment happens directly through GitHub Actions using artifacts.
 
-## 🚀 Как это работает
+## Frontend
 
-### 1. Обновление списка пакетов
-Каждые 6 часов запускается `ci-cd.yml`:
-- Сканирует репозитории NurOS-Packages
-- Собирает метаданные из `metadata.json` файлов
-- Генерирует актуальный `repodata.json`
+The frontend is built with SolidJS and provides:
 
-### 2. Сборка фронтенда
-После обновления списка:
-- Установка зависимостей
-- Сборка через Vite
-- Деплой на GitHub Pages
+- Package search by name and description
+- Filtering by various criteria
+- Package grouping
+- Detailed information display
+- Full JSON representation view
 
-### 3. WASM Hardware Detector
-Новый модуль для определения характеристик устройства:
-- **CPU**: количество ядер через `navigator.hardwareConcurrency`
-- **RAM**: объем памяти через `performance.memory`
-- **GPU**: информация через WebGL API
+See [README](listpkgs.nuros.front-end/README.md) in the frontend folder for more details.
 
-## 🛠️ Технологии
+## Documentation
 
-### Фронтенд
-- **SolidJS** - реактивный фреймворк
-- **TypeScript** - типизация
-- **Vite** - сборка
-- **SCSS** - стилизация
-- **Playwright** - E2E тесты
+Documentation is now hosted on **GitBook** for a better reading experience and separate domain.
 
-### Бэкенд
-- **Python** - агрегация пакетов
-- **httpx** - HTTP запросы
-- **uv** - менеджер пакетов
+### 📚 Documentation Site
 
-### WASM
-- **Go** - язык для WASM модулей
-- **TinyGo** - компилятор для WASM
-- **Meson + Ninja** - система сборки
-- **Make** - линтинг и форматирование
+- **GitBook**: Setup required - see [GITBOOK_SETUP.md](blog/GITBOOK_SETUP.md)
+- **Includes**:
+  - Getting Started Guide
+  - System Architecture Overview
+  - Frontend User Guide
+  - API Reference & Integration Examples
+  - Deployment & CI/CD Guide
+  - Contributing Guidelines
+  - FAQ
 
-## 📦 Установка и запуск локально
+### Documentation Development
 
-### Требования
-- Node.js 22+
-- pnpm 9+
-- Docker/Podman (опционально)
+Documentation is in the `blog/` directory and uses:
+- **GitBook** for hosting and rendering
+- **GitHub Actions** for automatic sync on push to `main`
+- **Prettier** for markdown formatting
 
-### Быстрый старт
+#### Quick Setup
 
-```bash
-# Клонировать репозиторий
-git clone https://github.com/CubicArnament/listpkgs.nuros.org.git
-cd listpkgs.nuros.org
+1. Go to [GitBook](https://app.gitbook.com/)
+2. Create a Space
+3. Connect this repository (`NurOS-Linux/listpkgs.nuros.org`)
+4. Set source folder to `blog/`
+5. Enable auto-sync
 
-# Установить зависимости фронтенда
-cd listpkgs.nuros.front-end
-pnpm install
+See [blog/GITBOOK_SETUP.md](blog/GITBOOK_SETUP.md) for detailed instructions.
 
-# Запустить dev сервер
-pnpm dev
+#### Documentation Files
 
-# Запустить линтинг
-pnpm lint
+| File | Description |
+|------|-------------|
+| `blog/README.md` | Documentation home page |
+| `blog/SUMMARY.md` | Table of contents (GitBook navigation) |
+| `blog/book.json` | GitBook configuration |
+| `blog/getting-started.md` | Quick start guide |
+| `blog/architecture.md` | System architecture |
+| `blog/frontend-guide.md` | Frontend user guide |
+| `blog/api-reference.md` | API documentation |
+| `blog/deployment.md` | Deployment guide |
+| `blog/contributing.md` | Contributing guidelines |
+| `blog/faq.md` | Frequently asked questions |
 
-# Запустить тесты
-pnpm test
-```
+## Contributing
 
-### Через Docker Compose
+To contribute:
 
-```bash
-# Development сервер
-docker compose --profile development up dev
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the remote branch
+5. Create a pull request
 
-# Preview production сборки
-docker compose --profile preview up preview
+For documentation changes, simply edit files in `blog/` and they will auto-sync to GitBook.
 
-# Запустить линтинг в контейнере
-docker compose --profile ci run --rm lint
+## License
 
-# Запустить тесты в контейнере
-docker compose --profile ci run --rm test
-
-# Сформатировать код
-docker compose --profile development run --rm format
-```
-
-### WASM сборка
-
-```bash
-# Сборка WASM модуля
-cd listpkgs.nuros.front-end/src-go
-meson setup build
-meson compile -C build
-
-# Линтинг Go кода
-make lint
-
-# Форматирование Go кода
-make format
-```
-
-## 🧪 Тестирование
-
-```bash
-# Запустить все тесты
-pnpm test
-
-# Запустить тесты в UI режиме
-pnpm test:ui
-
-# Запустить тесты в headed режиме
-pnpm test:headed
-
-# Запустить тесты с дебагом
-pnpm test:debug
-```
-
-## 📝 Кодстайл
-
-```bash
-# Линтинг TypeScript + SCSS
-pnpm lint
-
-# Форматирование кода
-pnpm format
-
-# Проверка форматирования
-pnpm check-format
-```
-
-## 🤝 Contributing
-
-Мы приветствуем вклад в проект!
-
-### Как внести вклад
-
-1. Fork репозиторий
-2. Создайте feature branch (`git checkout -b feature/amazing-feature`)
-3. Закоммитьте изменения (`git commit -m 'Add amazing feature'`)
-4. Запушьте branch (`git push origin feature/amazing-feature`)
-5. Откройте Pull Request
-
-### Требования к коду
-
-- ✅ Все тесты должны проходить
-- ✅ Линтинг без ошибок
-- ✅ Код отформатирован
-- ✅ Добавлены тесты для новых функций
-
-## 📚 Документация
-
-Полная документация доступна в папке `blog/` и включает:
-
-- 📘 Руководство по началу работы
-- 🏗️ Архитектура системы
-- 🔌 API Reference
-- 🚀 Руководство по деплою
-- 🤝 Guidelines для контрибьюторов
-
-## 📄 Лицензия
-
-Этот проект распространяется под лицензией **MIT**. См. файл [LICENSE](LICENSE) для деталей.
-
-## 👥 Команда
-
-- **NurOS Development Team** - основная разработка
-- **Сообщество** - контрибьюторы и пользователи
-
-## 🔗 Ссылки
-
-- [NurOS Website](https://www.nuros.org/)
-- [NurOS Documentation](https://docs.nuros.org/)
-- [NurOS-Packages](https://github.com/NurOS-Packages/)
-- [NurOS-Linux](https://github.com/NurOS-Linux/)
-
----
-
-<div align="center">
-
-**Made with ❤️ by NurOS Team**
-
-[Website](https://www.nuros.org/) • [Documentation](https://docs.nuros.org/) • [GitHub](https://github.com/CubicArnament/listpkgs.nuros.org)
-
-</div>
+MIT
