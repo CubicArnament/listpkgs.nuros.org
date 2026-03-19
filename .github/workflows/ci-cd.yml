@@ -95,9 +95,17 @@ jobs:
             else
               echo "Lint failed or not found. Result: $LINT_RESULT"
               echo "passed=false" >> $GITHUB_OUTPUT
+              # Exit with error to fail the job immediately
+              exit 1
             fi
             break
           done
+
+      - name: Fail if lint did not pass
+        if: steps.check.outputs.passed != 'true'
+        run: |
+          echo "::error::Lint check failed for branch ${{ github.ref_name }}"
+          exit 1
 
       - name: Log lint status
         run: |
