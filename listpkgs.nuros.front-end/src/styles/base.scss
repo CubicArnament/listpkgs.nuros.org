@@ -11,7 +11,7 @@
 
 [data-theme='light'] {
   color-scheme: light;
-  background-image: 
+  background-image:
     radial-gradient(ellipse at center, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
     radial-gradient(ellipse at top, rgba(14, 165, 233, 0.04) 0%, transparent 70%);
 }
@@ -40,8 +40,13 @@ html {
 body {
   background-color: var(--color-background);
   // NurOS-style: deep black with glowing blue aura in center
-  background-image: 
-    radial-gradient(ellipse at center, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0.1) 30%, rgba(14, 165, 233, 0.05) 50%, transparent 70%);
+  background-image: radial-gradient(
+    ellipse at center,
+    rgba(14, 165, 233, 0.18) 0%,
+    rgba(14, 165, 233, 0.1) 30%,
+    rgba(14, 165, 233, 0.05) 50%,
+    transparent 70%
+  );
   background-attachment: fixed;
   background-size: cover;
   color: var(--color-text-primary);
