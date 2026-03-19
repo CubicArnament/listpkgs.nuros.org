@@ -52,7 +52,7 @@
   right: v.$spacing-sm;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(var(--color-accent-rgb), 0.15);
+  background: rgba(var(--color-accent-rgb), 0.12);
   color: var(--color-accent);
   border: none;
   border-radius: 50%;
@@ -70,6 +70,7 @@
     background: var(--color-accent);
     color: #fff;
     transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 18px rgba(var(--color-accent-rgb), 0.5);
   }
 }
 
@@ -86,7 +87,8 @@
 
   &:hover {
     filter: brightness(1.1);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(var(--color-accent-rgb), 0.5);
   }
 
   &:active {

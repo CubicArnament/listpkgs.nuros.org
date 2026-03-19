@@ -3,45 +3,45 @@
 // ============================================================================
 
 // ============================================================================
-// DARK THEME (Default)
+// DARK THEME (Default) - NurOS Style (Deep Black with Blue Aura)
 // ============================================================================
 
 // --- Core Palette - Dark ---
-$color-background-dark: #0a0e1a; // Deep navy black
-$color-surface-dark: #0f172a; // Surface dark
-$color-surface-light-dark: #1e293b; // Surface light dark
-$color-glass-bg-dark: rgb(15 23 42 / 75%); // Premium glass background
-$color-text-primary-dark: #f1f5f9; // Bright white
-$color-text-secondary-dark: #94a3b8; // Muted gray
-$color-accent-blue-dark: #00f5ff; // Nuros Cyan - primary accent
-$color-accent-pink-dark: #ff6b9d; // Secondary accent
-$color-border-dark: rgb(255 255 255 / 8%); // Subtle border
+$color-background-dark: #000000; // Pure black like nuros.org
+$color-surface-dark: #030610; // Almost black navy
+$color-surface-light-dark: #0a1020; // Dark navy for surfaces
+$color-glass-bg-dark: rgb(3 6 16 / 70%); // Deep glass
+$color-text-primary-dark: #ffffff; // Pure white
+$color-text-secondary-dark: #94a3b8; // Soft gray
+$color-accent-blue-dark: #0ea5e9; // Beautiful cyan-blue (like nuros.org)
+$color-accent-pink-dark: #ec4899; // Pink accent
+$color-border-dark: rgb(255 255 255 / 5%); // Very subtle border
 
 // --- Additional Palette - Dark ---
-$nuros-accent-cyan: #00f5ff;
-$nuros-accent-pink: #ff6b9d;
-$nuros-accent-purple: #a855f7;
-$nuros-navy: #0a0e1a;
+$nuros-accent-cyan: #0ea5e9; // Cyan-blue (eye-friendly)
+$nuros-accent-pink: #ec4899; // Pink
+$nuros-accent-purple: #8b5cf6; // Purple
+$nuros-navy: #000000;
 
 // ============================================================================
-// LIGHT THEME
+// LIGHT THEME - Clean & Calm
 // ============================================================================
 
 // --- Core Palette - Light ---
-$color-background-light: #f8fafc; // Light gray background
-$color-surface-light: #fff; // White surface
+$color-background-light: #ffffff; // Pure white
+$color-surface-light: #f8fafc; // Very light gray surface
 $color-surface-alt-light: #f1f5f9; // Alternate surface
-$color-glass-bg-light: rgb(255 255 255 / 80%); // Light glass background
+$color-glass-bg-light: rgb(255 255 255 / 85%); // Light glass background
 $color-text-primary-light: #0f172a; // Dark navy text
 $color-text-secondary-light: #64748b; // Muted gray text
-$color-accent-blue-light: #06f; // Blue accent for light theme
-$color-accent-pink-light: #ff6b9d; // Pink accent (same)
+$color-accent-blue-light: #0891b2; // Cyan for light theme
+$color-accent-pink-light: #db2777; // Muted pink accent
 $color-border-light: rgb(0 0 0 / 8%); // Subtle dark border
 
 // --- Additional Palette - Light ---
-$nuros-accent-cyan-light: #06f;
-$nuros-accent-pink-light: #ff6b9d;
-$nuros-accent-purple-light: #7c3aed;
+$nuros-accent-cyan-light: #0891b2; // Soft cyan
+$nuros-accent-pink-light: #db2777; // Muted pink
+$nuros-accent-purple-light: #7c3aed; // Purple
 $nuros-white: #fff;
 
 // ============================================================================
@@ -81,19 +81,19 @@ $transition-base: 0.3s ease;
 $transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 $transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-// --- Effects - Dark Theme ---
-$shadow-glow: 0 0 30px rgba($color-accent-blue-dark, 0.3);
-$shadow-sm-dark: 0 1px 2px rgb(0 0 0 / 50%);
-$shadow-md-dark: 0 4px 8px rgb(0 0 0 / 60%);
-$shadow-lg-dark: 0 10px 24px rgb(0 0 0 / 70%);
-$shadow-xl-dark: 0 20px 48px rgb(0 0 0 / 80%);
+// --- Effects - Dark Theme (NurOS Blue Aura) ---
+$shadow-glow: 0 0 40px rgba(var(--color-accent-rgb), 0.35); // Beautiful blue aura
+$shadow-sm-dark: 0 1px 2px rgb(0 0 0 / 40%);
+$shadow-md-dark: 0 4px 8px rgb(0 0 0 / 50%);
+$shadow-lg-dark: 0 10px 24px rgb(0 0 0 / 60%);
+$shadow-xl-dark: 0 20px 48px rgb(0 0 0 / 70%);
 
 // --- Effects - Light Theme ---
-$shadow-sm-light: 0 1px 3px rgb(0 0 0 / 10%);
-$shadow-md-light: 0 4px 12px rgb(0 0 0 / 12%);
-$shadow-lg-light: 0 10px 24px rgb(0 0 0 / 15%);
-$shadow-xl-light: 0 20px 48px rgb(0 0 0 / 20%);
-$backdrop-blur: blur(16px);
+$shadow-sm-light: 0 1px 2px rgb(0 0 0 / 8%);
+$shadow-md-light: 0 4px 8px rgb(0 0 0 / 10%);
+$shadow-lg-light: 0 10px 20px rgb(0 0 0 / 12%);
+$shadow-xl-light: 0 20px 40px rgb(0 0 0 / 15%);
+$backdrop-blur: blur(12px); // Reduced from 16px for subtler effect
 
 // --- Z-Index ---
 $z-header: 100;
@@ -115,7 +115,7 @@ $z-modal: 300;
   // Accent
   --color-accent: #{$color-accent-blue-dark};
   --color-accent-secondary: #{$color-accent-pink-dark};
-  --color-accent-rgb: 0, 245, 255; // RGB values for rgba()
+  --color-accent-rgb: 14, 165, 233; // RGB for #0ea5e9 (cyan-blue)
 
   // Glass Effect
   --glass-background: #{$color-glass-bg-dark};
@@ -146,7 +146,7 @@ $z-modal: 300;
   // Accent
   --color-accent: #{$color-accent-blue-light};
   --color-accent-secondary: #{$color-accent-pink-light};
-  --color-accent-rgb: 0, 102, 255; // RGB values for rgba()
+  --color-accent-rgb: 8, 145, 178; // RGB for #0891b2 (soft cyan)
 
   // Glass Effect
   --glass-background: #{$color-glass-bg-light};

@@ -16,24 +16,35 @@ services:
   # Profile: development (default)
   # -------------------------------------------------------------------------
   dev:
-    image: node:22-alpine
+    build:
+      context: .
+      dockerfile: docker/frontend_dev.Dockerfile
     container_name: nuros-dev
-    working_dir: /app/listpkgs.nuros.front-end
     volumes:
-      - ./listpkgs.nuros.front-end:/app/listpkgs.nuros.front-end
-      - node_modules:/app/listpkgs.nuros.front-end/node_modules
+      - ./listpkgs.nuros.front-end/src:/app/listpkgs.nuros.front-end/src:cached
+      - ./listpkgs.nuros.front-end/public:/app/listpkgs.nuros.front-end/public:cached
+      - ./listpkgs.nuros.front-end/index.html:/app/listpkgs.nuros.front-end/index.html:cached
+      - ./listpkgs.nuros.front-end/vite.config.ts:/app/listpkgs.nuros.front-end/vite.config.ts:cached
+      - ./listpkgs.nuros.front-end/tsconfig.json:/app/listpkgs.nuros.front-end/tsconfig.json:cached
+      - ./listpkgs.nuros.front-end/tsconfig.app.json:/app/listpkgs.nuros.front-end/tsconfig.app.json:cached
+      - ./listpkgs.nuros.front-end/tsconfig.node.json:/app/listpkgs.nuros.front-end/tsconfig.node.json:cached
     ports:
       - "5173:5173"
     environment:
       - NODE_ENV=development
       - HOST=0.0.0.0
       - VITE_DEV_SERVER=true
-    command: ["sh", "-c", "apk add --no-cache pnpm && corepack enable pnpm && pnpm install --frozen-lockfile && pnpm dev --host 0.0.0.0"]
+      - VITE_BASE_PATH=/
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    command: ["pnpm", "dev"]
     profiles:
       - development
       - ""
     networks:
       - nuros-network
+    stdin_open: true
+    tty: true
 
   # -------------------------------------------------------------------------
   # Service: Preview Production Build (nginx)

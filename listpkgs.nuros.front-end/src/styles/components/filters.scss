@@ -23,7 +23,7 @@
   gap: v.$spacing-xs;
   padding: v.$spacing-xs v.$spacing-sm;
   background: rgba(var(--color-accent-rgb), 0.12);
-  border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+  border: 1px solid rgba(var(--color-accent-rgb), 0.25);
   border-radius: v.$radius-md;
   color: var(--color-accent);
   font-size: v.$fs-sm;
@@ -31,8 +31,9 @@
   transition: var(--transition-smooth);
 
   &:hover {
-    background: rgba(var(--color-accent-rgb), 0.2);
+    background: rgba(var(--color-accent-rgb), 0.25);
     transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(var(--color-accent-rgb), 0.4);
   }
 }
 
@@ -49,6 +50,7 @@
 
   &:hover {
     filter: brightness(1.1);
+    box-shadow: 0 0 20px rgba(var(--color-accent-rgb), 0.45);
   }
 }
 
@@ -87,7 +89,7 @@
   transition: var(--transition-smooth);
 
   &:hover {
-    background: rgba(var(--color-accent-rgb), 0.08);
+    background: rgba(var(--color-accent-rgb), 0.12);
   }
 
   input[type='checkbox'] {

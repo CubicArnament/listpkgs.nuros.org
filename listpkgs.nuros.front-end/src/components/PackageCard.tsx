@@ -113,9 +113,11 @@ const PackageCard = (props: PackageCardProps) => {
       </div>
 
       <div class="package-links">
-        <a href={props.packageData._source_repo} target="_blank" rel="noopener noreferrer">
-          Repository
-        </a>
+        <div class="package-link-item">
+          <a href={props.packageData._source_repo} target="_blank" rel="noopener noreferrer">
+            Repository
+          </a>
+        </div>
         <Switch>
           <Match when={props.packageData.license}>
             <span class="package-license">License: {props.packageData.license}</span>

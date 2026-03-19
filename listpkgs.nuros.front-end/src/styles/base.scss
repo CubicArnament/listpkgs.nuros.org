@@ -11,6 +11,9 @@
 
 [data-theme='light'] {
   color-scheme: light;
+  background-image: 
+    radial-gradient(ellipse at center, rgba(14, 165, 233, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at top, rgba(14, 165, 233, 0.04) 0%, transparent 70%);
 }
 
 // --- Global Reset & Base ---
@@ -30,6 +33,11 @@ html {
 
 body {
   background-color: var(--color-background);
+  // NurOS-style: deep black with glowing blue aura in center
+  background-image: 
+    radial-gradient(ellipse at center, rgba(14, 165, 233, 0.18) 0%, rgba(14, 165, 233, 0.1) 30%, rgba(14, 165, 233, 0.05) 50%, transparent 70%);
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--color-text-primary);
   font-family:
     Inter,
@@ -45,21 +53,33 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 
-  // Smooth theme transition with all color properties
+  // Ultra-smooth theme transition (0.8s for buttery smooth effect)
   transition:
-    background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    background-image 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Apply smooth transition to all elements for theme switching
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // Theme transition animation for all elements with glass effect
 .glass-transition,
 [data-theme] {
   transition:
-    background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #root {
@@ -103,7 +123,8 @@ a {
   -webkit-tap-highlight-color: transparent;
 
   &:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.1);
+    text-shadow: 0 0 12px rgba(var(--color-accent-rgb), 0.4);
   }
 }
 
@@ -135,7 +156,8 @@ button {
   border-radius: v.$radius-md;
 
   &:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.1);
+    box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.5);
   }
 }
 

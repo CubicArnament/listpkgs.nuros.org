@@ -55,7 +55,7 @@
 
   &:hover:not(.active) {
     color: var(--color-text-primary);
-    background: rgba(var(--color-accent-rgb), 0.08);
+    background: rgba(var(--color-accent-rgb), 0.18);
   }
 
   &:disabled {
